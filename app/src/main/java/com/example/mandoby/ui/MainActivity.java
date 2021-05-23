@@ -1,18 +1,27 @@
-package com.example.mandoby;
+package com.example.mandoby.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mandoby.R;
+
 public class MainActivity extends AppCompatActivity {
+
+    //Hooks
     ImageView SplashImage;
     TextView TitleTV;
     TextView BottomTitleTV;
+
+    //The time of the splash screen
+    private static int SPLASH_SCREEN = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         SplashImage.setAnimation(imgUtils);
         TitleTV.setAnimation(txtUtils);
         BottomTitleTV.setAnimation(txtUtils);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this , Dashboard.class);
+                startActivity(intent);
+                finish();
+            }
+        } ,SPLASH_SCREEN);
 
     }
 }

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".ui.MainActivity"
     android:background="#fece2f">
 
     <ImageView
         android:id="@+id/splashScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="77dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="160dp"
         android:layout_marginEnd="78dp"
         android:layout_marginBottom="300dp"
@@ -25,10 +25,10 @@
 
     <TextView
         android:id="@+id/splash_title"
-        android:layout_width="218dp"
-        android:layout_height="93dp"
+        android:layout_width="274dp"
+        android:layout_height="84dp"
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/bangers"
+        android:fontFamily="@font/baloo_bhai"
         android:text="Mandoby"
         android:textAlignment="center"
         android:textSize="60dp"

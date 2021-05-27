@@ -1,4 +1,4 @@
-package com.example.mandoby.ui.User;
+package com.example.mandoby.ui.User.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 

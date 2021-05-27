@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="30dp"
     android:background="@color/colorPrimary"
-    tools:context=".ui.User.RegisterScreen">
+    tools:context=".ui.User.Auth.RegisterScreen">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,8 +22,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create \n account"
-            android:textSize="40sp"
+            android:text="Mandoby"
+            android:textSize="45sp"
             android:fontFamily="@font/baloo_bhai"
             android:layout_marginTop="15dp"
             android:textColor="@color/black"
@@ -34,51 +34,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="25dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/dashboard_logo"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Enter full name"
-                app:startIconDrawable="@drawable/full_name_icon"
-                app:startIconTint="@color/black"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:textColorHint="@color/black"
-                app:hintTextColor="@color/black"
-                app:endIconDrawable="@drawable/text_feild_clear"
-                app:endIconTint="@color/black"
-                app:boxStrokeColor="@color/black"
-                app:boxStrokeWidthFocused="2dp"
-                >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
+                android:fontFamily="@font/baloo_bhai"
+                android:textAlignment="center"
+                android:text="We apply some features that allow you to get what you need easily "
+                android:textSize="15dp" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="50dp"
                 android:orientation="vertical">
-            <com.hbb20.CountryCodePicker
-                android:id="@+id/country_code_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/country_code_bg"
-                android:padding="7dp"
-                app:ccp_autoDetectCountry="true"
-                app:ccp_showFlag="true"
-                app:ccp_showFullName="true"
-                app:ccp_showNameCode="true"
-                android:layout_marginTop="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/signup_phone_number"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/country_code_picker"
                 android:hint="Enter Phone number"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/black"

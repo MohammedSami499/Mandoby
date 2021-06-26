@@ -8,7 +8,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.chaos.view.PinView;
 import com.example.mandoby.Network.Interface;
 import com.example.mandoby.R;
 import com.example.mandoby.model.UserInfo;
@@ -17,30 +22,28 @@ import com.google.android.material.textfield.TextInputEditText;
 public class RegisterScreen extends AppCompatActivity {
 
     public static String BASE_URL = "url";
-    TextInputEditText phone_num;
-    String enteredPhoneNum;
+    TextInputEditText user_name;
+    PinView pinViewTOP;
+    Button confirmationButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         //hooks
         setContentView(R.layout.activity_register_screen);
-        phone_num = (TextInputEditText) findViewById(R.id.signup_phone_number);
-        enteredPhoneNum = phone_num.getText().toString();
+        user_name = (TextInputEditText) findViewById(R.id.user_name);
+        confirmationButton = (Button)  findViewById(R.id.register_confirm_btn);
+        pinViewTOP =(PinView)findViewById(R.id.otp_pinView);
 
-        //model
-        UserInfo userInfo = new UserInfo(enteredPhoneNum);
+        confirmationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("PinView", "pinView Data : "+ pinViewTOP.getText().toString());
+                Toast.makeText(RegisterScreen.this,"Hello : "+ pinViewTOP.getText().toString(), Toast.LENGTH_SHORT).show();
 
-        //network
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Interface logInInterface = retrofit.create(Interface.class);
-        Call<UserInfo> posting = logInInterface.login(userInfo);
+            }
+        });
 
 
     }

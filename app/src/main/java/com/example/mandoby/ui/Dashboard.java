@@ -9,7 +9,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.mandoby.R;
-import com.example.mandoby.ui.User.Auth.RegisterScreen;
+import com.example.mandoby.ui.User.Auth.Login;
+import com.example.mandoby.ui.posts.AddPost;
 
 public class Dashboard extends AppCompatActivity {
     //Hooks
@@ -26,7 +27,7 @@ public class Dashboard extends AppCompatActivity {
         AddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Dashboard.this, RegisterScreen.class);
+                Intent intent = new Intent(Dashboard.this, Login.class);
                 startActivity(intent);
             }
         });

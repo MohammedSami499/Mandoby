@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Mandoby</string>
+    <string name="nav_open">Navigation Drawable Open</string>
+    <string name="nav_close">Navigation Drawable Close</string>
 </resources>

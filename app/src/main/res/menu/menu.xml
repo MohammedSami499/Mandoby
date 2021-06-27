@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:title="Home"
+            android:icon="@drawable/nav_home"/>
+        <item
+            android:id="@+id/add_post"
+            android:title="Add Post"
+            android:icon="@drawable/add_post"/>
+        <item
+            android:id="@+id/represents"
+            android:title="Representative Posts"
+            android:icon="@drawable/representative"/>
+        <item
+            android:id="@+id/clients"
+            android:title="Clients Posts"
+            android:icon="@drawable/client_posts"/>
+    </group>
+
+    <item android:title="Profile">
+
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/profile"
+                    android:title="Profile"
+                    android:icon="@drawable/profile"/>
+                <item
+                    android:id="@+id/logout"
+                    android:title="Logout"
+                    android:icon="@drawable/log_out"/>
+                <item
+                    android:id="@+id/login"
+                    android:title="Login"
+                    android:icon="@drawable/log_in"/>
+            </group>
+
+        </menu>
+
+    </item>
+
+</menu>

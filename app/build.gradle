@@ -49,4 +49,7 @@ dependencies {
     //otp pinView
     implementation 'com.chaos.view:pinview:1.4.4'
 
+    //jetbrain dependency
+    implementation 'org.jetbrains:annotations:16.0.2'
+
 }

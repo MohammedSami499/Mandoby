@@ -74,7 +74,7 @@
             android:fontFamily="@font/baloo_bhai"
             android:text="Enter the OTP message"
             android:layout_marginLeft="13dp"
-            android:textColor="#303030"
+            android:textColor="@color/lightBlack"
             android:textSize="17sp" />
 
         <com.chaos.view.PinView

@@ -1,87 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Dashboard"
     android:orientation="vertical"
-    android:background="@color/home_background">
+    android:background="@color/home_background"
+    android:id="@+id/drawer_layout"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <RelativeLayout
-        android:id="@+id/logo_layout"
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_view"
+        app:headerLayout="@layout/header_file"
+        app:menu="@menu/menu"
+        android:layout_gravity="start"
+        />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        >
-        <ImageView
-            android:id="@+id/side_menu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/home_side_bar"
-            android:layout_centerVertical="true"
-            />
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/dashboard_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
-            android:fontFamily="@font/baloo_bhai"
-            android:text="Mandoby"
-            android:textSize="40dp" />
-        <ImageView
-            android:id="@+id/add_post"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/icon_add_post"
-            android:layout_alignParentRight="true"
-            android:background="@color/banner_background"
-            android:layout_centerVertical="true"
-            />
-
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/search_layout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/white"
-        android:elevation="8dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search..."
-            android:textSize="20dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            />
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/dashboard_search_img"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:padding="5dp"/>
-    </RelativeLayout>
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <androidx.recyclerview.widget.RecyclerView
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/logo_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            >
+            <ImageView
+                android:id="@+id/side_menu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/home_side_bar"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:id="@+id/dashboard_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
+                android:fontFamily="@font/baloo_bhai"
+                android:text="Mandoby"
+                android:textSize="50dp" />
+            <ImageView
+                android:id="@+id/add_post"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_add_post"
+                android:layout_alignParentRight="true"
+                android:background="@color/banner_background"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:elevation="8dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search..."
+                android:textSize="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/dashboard_search_img"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <androidx.cardview.widget.CardView
+                android:layout_width="190dp"
+                android:layout_height="match_parent"
+                android:id="@+id/clients"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="5dp"
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@color/banner_background">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Clients"
+                        android:textSize="40dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/baloo_bhai"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:includeFontPadding="false"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Posts of all clients posts"
+                        android:textColor="@color/lightBlack"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:includeFontPadding="false"
+                        android:fontFamily="@font/baloo_bhai"
+                        android:textSize="25dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to see a bunch of the clients posts and
+                     see what's suitable for you"
+                        android:textColor="@color/lightBlack"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="15dp"
+                        android:includeFontPadding="false"
+                        android:textSize="15dp"
+                        />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <androidx.cardview.widget.CardView
+                android:layout_width="190dp"
+                android:layout_height="match_parent"
+                android:id="@+id/representatives"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="5dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@color/banner_background"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Represents"
+                        android:textSize="34dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/baloo_bhai"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="10dp"
+                        android:includeFontPadding="false"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Posts of all Representative posts"
+                        android:textColor="@color/lightBlack"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:includeFontPadding="false"
+                        android:fontFamily="@font/baloo_bhai"
+                        android:textSize="25dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to see a bunch of the clients posts and
+                     see what's suitable for you"
+                        android:textColor="@color/lightBlack"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="15dp"
+                        android:includeFontPadding="false"
+                        android:textSize="15dp"
+                        />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                />
+        </LinearLayout>
 
 </LinearLayout>
+    </ScrollView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

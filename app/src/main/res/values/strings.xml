@@ -2,4 +2,7 @@
     <string name="app_name">Mandoby</string>
     <string name="nav_open">Navigation Drawable Open</string>
     <string name="nav_close">Navigation Drawable Close</string>
+    <string name="add_post">Add Post</string>
+    <string name="add_product_name">Your product name</string>
+
 </resources>

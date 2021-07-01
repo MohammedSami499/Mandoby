@@ -52,7 +52,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         AddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Dashboard.this, Login.class);
+                Intent intent = new Intent(Dashboard.this, AddPost.class);
                 startActivity(intent);
             }
         });

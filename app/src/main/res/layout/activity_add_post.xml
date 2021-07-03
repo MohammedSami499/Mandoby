@@ -187,11 +187,14 @@
 
 
     <LinearLayout
+
+    android:id="@+id/add_postlayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="20dp"
     android:background="@color/banner_background"
     android:layout_gravity="end"
+    android:clickable="true"
 
     >
     <ImageView
@@ -203,8 +206,10 @@
         android:background="@color/banner_background"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
+        android:clickable="true"
         />
         <TextView
+            android:id="@+id/add_post_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_post"
@@ -212,6 +217,7 @@
             android:textSize="25sp"
             android:layout_marginHorizontal="10dp"
             android:layout_gravity="center"
+            android:clickable="true"
             />
 
 

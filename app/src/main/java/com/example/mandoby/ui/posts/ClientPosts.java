@@ -1,69 +1,41 @@
 package com.example.mandoby.ui.posts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
 import com.example.mandoby.R;
+import com.example.mandoby.model.ClientPostsAdapter;
 import com.example.mandoby.model.Post;
-import com.example.mandoby.model.PostAdapter;
-
-import java.util.ArrayList;
+import com.example.mandoby.viewModels.PostViewModel;
+import java.util.List;
 
 public class ClientPosts extends AppCompatActivity {
 
-        RecyclerView recyclerView;
-        ArrayList<Post> posts;
-        PostAdapter myAdapter;
-        String[] headings;
-        int[] imageResource;
-
-        @Override
+    PostViewModel  postViewModel;
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_client_posts);
 
-
-        recyclerView = findViewById(R.id.RV_posts);
+        postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+        postViewModel.getPosts();
+        RecyclerView recyclerView= findViewById(R.id.RV_posts);
+        ClientPostsAdapter myAdapter= new ClientPostsAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-
-
-        posts= new ArrayList<Post>();
-
-        myAdapter = new PostAdapter(this,posts);
         recyclerView.setAdapter(myAdapter);
-
-        headings = new String[]{
-                "aaa aaaa vmvmvmvm rkmfdm elfm dvs ",
-                "aaa aaaa vmvmvmvm rkmfdm elfm dvs ",
-                "aaa aaaa vmvmvmvm rkmfdm elfm dvs ",
-                "aaa aaaa vmvmvmvm rkmfdm elfm dvs ",
-                "aaa aaaa vmvmvmvm rkmfdm elfm dvs ",
-        };
-
-        imageResource = new int []{
-                R.drawable.add_post,
-                R.drawable.add_post,
-                R.drawable.add_post,
-                R.drawable.add_post,
-                R.drawable.add_post,
-
-        };
-            getData();
+        postViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> post) {
+                myAdapter.setPostsList( post);
+            }
+        });
 
     }
 
-    private void getData() {
-
-    for (int i =0 ; i< headings.length;++i){
-        Post post =new Post(headings[i],imageResource[i]);
-        posts.add(post);
-    }
-    myAdapter.notifyDataSetChanged();
-
-    }
 }

@@ -14,9 +14,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="Clients Posts "
+        android:layout_marginBottom="5dp"
         android:fontFamily="@font/baloo_bhai"
+        android:text="Clients Posts "
         android:textColor="@color/black"
         android:textSize="30sp"
         />

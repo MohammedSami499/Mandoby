@@ -1,21 +1,42 @@
 package com.example.mandoby.model;
 
 public class UserInfo {
+    private String phone;
+    private String otp;
+    private String name;
 
-    private String phone_Num;
+    public UserInfo(String phone ) {
+        this.phone = phone;
+    }
+    public UserInfo(String phone , String name , String otp){
+        this.name = name;
+        this.phone = phone;
+        this.otp = otp;
+    }
 
-    public UserInfo(String user_Id) {
+    public String getName() {
+        return name;
+    }
 
-        this.phone_Num = phone_Num;
+    public void setName(String name) {
+        this.name = name;
     }
 
 
 
-    public String getPhone_Num() {
-        return phone_Num;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setPhone_Num(String phone_Num) {
-        this.phone_Num = phone_Num;
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

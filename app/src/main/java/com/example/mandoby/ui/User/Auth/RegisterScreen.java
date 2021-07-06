@@ -1,12 +1,8 @@
 package com.example.mandoby.ui.User.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.chaos.view.PinView;
-import com.example.mandoby.Network.Interface;
 import com.example.mandoby.R;
-import com.example.mandoby.model.UserInfo;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class RegisterScreen extends AppCompatActivity {
@@ -36,12 +30,21 @@ public class RegisterScreen extends AppCompatActivity {
         confirmationButton = (Button)  findViewById(R.id.register_confirm_btn);
         pinViewTOP =(PinView)findViewById(R.id.otp_pinView);
 
+        Intent intent = getIntent();
+        String phone = intent.getStringExtra("phone");
+        String otp = intent.getStringExtra("top");
+
         confirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("PinView", "pinView Data : "+ pinViewTOP.getText().toString());
                 Toast.makeText(RegisterScreen.this,"Hello : "+ pinViewTOP.getText().toString(), Toast.LENGTH_SHORT).show();
-
+                if(pinViewTOP.getText().toString().equals(otp)){
+                    Log.i("Data correct", otp);
+                }else {
+                    Log.i("Data error", pinViewTOP.getText().toString());
+                    Log.i("Original ", otp);
+                }
             }
         });
 

@@ -21,6 +21,8 @@ import com.example.mandoby.ui.posts.AddPost;
 import com.google.android.material.navigation.NavigationView;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public static boolean isLoggedIn = false;
+
     //Hooks
     ImageView AddPost;
     DrawerLayout drawerLayout;
@@ -50,9 +52,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         AddPost = (ImageView) findViewById(R.id.add_post);
         AddPost.setClickable(true);
         AddPost.setOnClickListener(new View.OnClickListener() {
+            Intent intent;
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Dashboard.this, AddPost.class);
+                if (isLoggedIn){
+                    intent = new Intent(Dashboard.this, AddPost.class);
+                }else{
+                    intent = new Intent(Dashboard.this, Login.class);
+                }
                 startActivity(intent);
             }
         });

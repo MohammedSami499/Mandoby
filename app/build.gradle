@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -52,5 +53,9 @@ dependencies {
 
     //jetbrain dependency
     implementation 'org.jetbrains:annotations:16.0.2'
+
+    //dependency of firebase otp
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+
 
 }

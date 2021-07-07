@@ -1,4 +1,5 @@
 package com.example.mandoby.Network;
+import com.example.mandoby.model.RegisterData;
 import com.example.mandoby.model.UserInfo;
 import com.example.mandoby.model.UserResponse;
 
@@ -12,7 +13,7 @@ public interface MandInterface {
     @POST("verify")
     public Call<UserInfo> loginToApi(@Body UserInfo userInfo);
 
-    @GET("response")
-    public Call<UserResponse> loginResponse();
+    @POST("verify")
+    public Call<RegisterData> registerConfirmation(@Body RegisterData registerData);
 
 }

@@ -117,12 +117,14 @@
                     android:gravity="start"/>
 
                 <TextView
+                    android:id="@+id/TV_user_posts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="11dp"
                     android:padding="7dp"
+                    android:clickable="true"
                     android:text="See all"
                     android:textColor="@color/card2"
                     android:textSize="22dp" />
@@ -149,9 +151,10 @@
                 android:layout_height="wrap_content"
                 >
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Represents Posts"
+                    android:text="Mandop Posts"
                     android:fontFamily="@font/baloo_bhai"
                     android:textColor="@color/black"
                     android:textSize="25dp"
@@ -160,6 +163,7 @@
                     android:gravity="start"/>
 
                 <TextView
+                    android:id="@+id/TV_mandop_posts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -168,7 +172,9 @@
                     android:padding="7dp"
                     android:text="See all"
                     android:textColor="@color/card2"
-                    android:textSize="22dp" />
+                    android:textSize="22dp"
+                    android:clickable="true"
+                    />
             </RelativeLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"

@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.posts.ClientPosts"
     android:orientation="vertical"
-    >
+    tools:context=".ui.posts.MandopPosts">
 
     <TextView
         android:id="@+id/mandop_posts_page_title"
@@ -17,7 +16,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
         android:fontFamily="@font/baloo_bhai"
-        android:text="Client Posts "
+        android:text="Mandop Posts "
         android:textColor="@color/black"
         android:textSize="30sp"
         />

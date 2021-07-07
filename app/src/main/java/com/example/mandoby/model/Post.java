@@ -6,25 +6,38 @@ import java.util.Date;
 
 public class Post {
 
-String PostID;
-String phone;
-String name;
-String productType;
-String amount;
-String government;
-String userType;
-String area;
-Date Date;
-int prodImage;
+    int PostID;
+    String phone;
+    String name;
+    String productType;
+    String amount;
+    String government;
+    String userType;
+    String area;
+    String Date;
+
+
+    public Post( String phone, String name, String productType, String amount, String government, String userType, String area, String date) {
+        this.phone = phone;
+        this.name = name;
+        this.productType = productType;
+        this.amount = amount;
+        this.government = government;
+        this.userType = userType;
+        this.area = area;
+        Date = date;
+    }
 
 
 
 
-    public String getPostID() {
+
+
+    public int getPostID() {
         return PostID;
     }
 
-    public void setPostID(String postID) {
+    public void setPostID(int postID) {
         PostID = postID;
     }
 
@@ -84,19 +97,13 @@ int prodImage;
         this.area = area;
     }
 
-    public java.util.Date getDate() {
+    public String getDate() {
         return Date;
     }
 
-    public void setDate(java.util.Date date) {
+    public void setDate(String date) {
         Date = date;
     }
 
-    public int getProdImage() {
-        return prodImage;
-    }
 
-    public void setProdImage(int prodImage) {
-        this.prodImage = prodImage;
-    }
 }

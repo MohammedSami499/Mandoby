@@ -8,16 +8,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toolbar;
+import android.widget.TextView;
 
 import com.example.mandoby.R;
-import com.example.mandoby.ui.User.Auth.Login;
 import com.example.mandoby.ui.posts.AddPost;
+import com.example.mandoby.ui.posts.ClientPosts;
+import com.example.mandoby.ui.posts.MandopPosts;
 import com.google.android.material.navigation.NavigationView;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +28,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageView sideBarImg;
+    TextView mandopPosts,userPosts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         sideBarImg = findViewById(R.id.side_menu);
+        mandopPosts = findViewById(R.id.TV_mandop_posts);
+        userPosts=findViewById(R.id.TV_user_posts);
 
         // Drawer Nav
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this , drawerLayout,R.string.nav_open , R.string.nav_close);
@@ -63,6 +66,27 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(intent);
             }
         });
+
+        // navigator to mandop posts page
+
+        mandopPosts.setOnClickListener(new View.OnClickListener(){
+            Intent intent;
+            @Override
+            public void onClick(View v){
+                intent = new Intent(Dashboard.this, MandopPosts.class);
+                startActivity(intent);
+            }});
+                    // navigator to mandop posts page
+
+        userPosts.setOnClickListener(new View.OnClickListener(){
+                                               Intent intent;
+                                               @Override
+                                               public void onClick(View v){
+                                                   intent = new Intent(Dashboard.this, ClientPosts.class);
+                                                   startActivity(intent);
+                                               }
+
+        });
     }
 
 
@@ -80,4 +104,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     public boolean onNavigationItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
         return true;
     }
+
+
 }

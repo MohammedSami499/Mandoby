@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginVertical="10dp"
+    >
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginVertical="5dp"
+        >
+
+        <TextView
+            android:id="@+id/mandop_posts_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:background="@color/banner_background"
+            android:elevation="5dp"
+            android:fontFamily="@font/baloo_bhai"
+            android:gravity="start"
+            android:text="Mohamed Tarek"
+            android:textSize="20sp"
+            android:paddingStart="10dp"/>
+
+        <TextView
+        android:id="@+id/mandop_posts_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:background="@color/banner_background"
+        android:elevation="5dp"
+        android:gravity="start"
+            android:paddingStart="10dp"
+        android:text="15/7/2021"
+        android:fontFamily="@font/baloo_bhai"
+        android:textSize="15sp"
+        android:layout_marginEnd="10dp"
+        />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/mandop_post_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="###################################################"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="5dp"
+        />
+
+<com.google.android.material.imageview.ShapeableImageView
+    android:id="@+id/img_product_picture"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:adjustViewBounds="true"
+    android:layout_gravity="start"
+    android:layout_marginEnd="10dp"
+    android:src="@drawable/add_post"
+    />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/banner_background"
+
+    >
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginVertical="5dp"
+        >
+
+        <TextView
+            android:id="@+id/mandop_posts_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@color/banner_background"
+            android:elevation="5dp"
+            android:paddingStart="10dp"
+            android:text="120"
+            android:fontFamily="@font/baloo_bhai"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="start"
+            />
+        <TextView
+            android:id="@+id/add_post_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Contact Request"
+            android:textColor="@color/black"
+            android:background="@color/colorPrimary"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:elevation="5dp"
+            android:layout_marginEnd="5dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+</LinearLayout>

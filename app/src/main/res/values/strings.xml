@@ -4,5 +4,15 @@
     <string name="nav_close">Navigation Drawable Close</string>
     <string name="add_post">Add Post</string>
     <string name="add_product_name">Your product name</string>
+    <string-array name="Unit">
 
+        <item>Bag</item>
+        <item>Box</item>
+        <item>carton</item>
+        <item>packet</item>
+        <item>bottle</item>
+        <item>can</item>
+        <item>bar</item>
+
+    </string-array>
 </resources>

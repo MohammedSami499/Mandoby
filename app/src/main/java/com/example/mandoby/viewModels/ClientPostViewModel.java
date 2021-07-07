@@ -13,12 +13,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostViewModel extends ViewModel {
+public class ClientPostViewModel extends ViewModel {
     public MutableLiveData<List<Post>> postMutableLiveData = new MutableLiveData<>();
 
     public void getPosts(){
 
-        PostsClient.getInstance().getPosts().enqueue(new Callback<List<Post>>() {
+        PostsClient.getInstance().getUsersPosts().enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 postMutableLiveData.setValue(response.body());

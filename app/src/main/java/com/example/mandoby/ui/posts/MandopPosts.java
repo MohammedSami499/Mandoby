@@ -9,25 +9,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import com.example.mandoby.R;
-import com.example.mandoby.adabters.ClientPostsAdapter;
+import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.viewModels.ClientPostViewModel;
-
 import java.util.List;
 
-public class ClientPosts extends AppCompatActivity {
+public class MandopPosts extends AppCompatActivity {
 
-        ClientPostViewModel postViewModel;
+    ClientPostViewModel postViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_posts);
+
+            super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_mandop_posts);
 
         postViewModel = ViewModelProviders.of(this).get(ClientPostViewModel.class);
         postViewModel.getPosts();
         RecyclerView recyclerView= findViewById(R.id.RV_posts);
-        ClientPostsAdapter myAdapter= new ClientPostsAdapter();
+        MandopPostsAdapter myAdapter= new MandopPostsAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(myAdapter);
         postViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
@@ -36,5 +38,7 @@ public class ClientPosts extends AppCompatActivity {
                 myAdapter.setPostsList( post);
             }
         });
+
     }
+
 }

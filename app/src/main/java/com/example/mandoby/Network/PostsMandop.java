@@ -8,13 +8,13 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PostsClient {
+public class PostsMandop {
 
     private static final String BASE_URL = "https://gp-mandoob-orders.herokuapp.com/";
     private PostInterface postInterface;
-    private static PostsClient Instance;
+    private static PostsMandop Instance;
 
-    public PostsClient() {
+    public PostsMandop() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -22,16 +22,16 @@ public class PostsClient {
         postInterface = retrofit.create(PostInterface.class);
     }
 
-    public static PostsClient getInstance() {
+    public static PostsMandop getInstance() {
         if (null == Instance){
-            Instance=new PostsClient();
+            Instance=new PostsMandop();
         }
         return Instance;
     }
 
-    public Call<List<Post>> getUsersPosts(){
+    public Call<List<Post>> getMandopPosts(){
 
-        return postInterface.getUsersPosts();
+        return postInterface.getMandopPosts();
     }
 
 }

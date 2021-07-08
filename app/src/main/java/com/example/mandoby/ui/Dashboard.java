@@ -15,13 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mandoby.R;
+import com.example.mandoby.ui.User.Auth.Login;
 import com.example.mandoby.ui.posts.AddPost;
 import com.example.mandoby.ui.posts.ClientPosts;
 import com.example.mandoby.ui.posts.MandopPosts;
 import com.google.android.material.navigation.NavigationView;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static boolean isLoggedIn = false;
+    public static boolean isLoggedIn = true;
 
     //Hooks
     ImageView AddPost;
@@ -59,9 +60,9 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onClick(View v) {
                 if (isLoggedIn){
-                    intent = new Intent(Dashboard.this, AddPost.class);
+                    intent = new Intent(Dashboard.this, com.example.mandoby.ui.posts.AddPost.class);
                 }else{
-                    intent = new Intent(Dashboard.this, AddPost.class);
+                    intent = new Intent(Dashboard.this, Login.class);
                 }
                 startActivity(intent);
             }
@@ -79,12 +80,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                     // navigator to mandop posts page
 
         userPosts.setOnClickListener(new View.OnClickListener(){
-                                               Intent intent;
-                                               @Override
-                                               public void onClick(View v){
-                                                   intent = new Intent(Dashboard.this, ClientPosts.class);
-                                                   startActivity(intent);
-                                               }
+             Intent intent;
+             @Override
+             public void onClick(View v){
+                 intent = new Intent(Dashboard.this, ClientPosts.class);
+                 startActivity(intent);
+             }
 
         });
     }

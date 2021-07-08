@@ -31,10 +31,6 @@ public class Post {
     }
 
 
-
-
-
-
     public int getPostID() {
         return PostID;
     }

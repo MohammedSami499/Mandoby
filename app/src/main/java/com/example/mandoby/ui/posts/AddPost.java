@@ -13,16 +13,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mandoby.Network.UploadClientPost;
+import com.example.mandoby.Network.PostInterface;
 import com.example.mandoby.R;
-import com.example.mandoby.model.Post;
+import com.example.mandoby.model.UploadedPost;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.io.ByteArrayOutputStream;
@@ -32,6 +31,8 @@ import java.text.DateFormat;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddPost extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     ImageView product_photo,imgAddPost;
@@ -39,13 +40,20 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
     TextView productname,quantity, addedGovernment,addpostArea;
     RadioButton client, mandop;
     Spinner spinner;
-    Post post;
-    String phone="01033450442",name="Tarek",selectedItemSpinner ,amount ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date , area
-            ,productType ="medical" , productName , government , userType;
-    int PostID= (int) Math.random();
-    Call<Post> call;
+    UploadedPost post;
 
+    String phone="01033450442",name="Tarek",selectedItemSpinner ,amount ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date = "55555" , area
+            ,productType ="Food" , productName , government , userType;
+    int PostID= 155;
+    Call<UploadedPost> call;
     private Bitmap bitmap;
+
+
+    private static final String BASE_URL = "https://gp-mandoob-orders.herokuapp.com/";
+    private PostInterface postInterface;
+    private Retrofit retrofit ;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +95,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         @Override
         public void onClick(View v) {
             uploadPost();
+
         }
     });
 
@@ -94,6 +103,16 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
     }
 
     private void uploadPost() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        postInterface = retrofit.create(PostInterface.class);
+
+
+       // call = postInterface.uploadClientPost(post);
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,75,byteArrayOutputStream);
         byte[] imageInByte= byteArrayOutputStream.toByteArray();
@@ -105,27 +124,38 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         area = addpostArea.getText().toString();
         name = productname.getText().toString();
         Date = DateFormat.getDateInstance().toString();
-
+        productName = productname.getText().toString();
 
         if(client.isChecked()){
             userType = "client";
-            post = new Post(PostID,phone,name,productType,amount,government,userType,area,Date);
-            call = UploadClientPost.getInstance().getApi().uploadClientPost(post);
+            post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
+                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
+                    ,"44-44-555");
+            call = postInterface.uploadClientPost(post);
 
-
-        }else{
-
+        }else if(mandop.isChecked()){
+            userType = "mandop";
+            post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
+                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
+            ,"44-44-555");
+            call = postInterface.uploadClientPost(post);
         }
-        call.enqueue(new Callback<Post>() {
+        else{
+            Toast.makeText(AddPost.this, "Please select you are mandop or client",Toast.LENGTH_LONG);
+            }
+
+        call.enqueue(new Callback<UploadedPost>() {
             @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
+            public void onResponse(Call<UploadedPost> call, Response<UploadedPost> response) {
                 Toast.makeText(AddPost.this,"Success",Toast.LENGTH_SHORT );
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                Toast.makeText(AddPost.this,"Fail",Toast.LENGTH_SHORT );
-            }
+            public void onFailure(Call<UploadedPost> call, Throwable t) {
+
+                System.out.println(t.getMessage().toString());
+
+                    }
         });
 
 

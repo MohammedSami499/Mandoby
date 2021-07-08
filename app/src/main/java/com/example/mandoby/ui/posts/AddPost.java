@@ -95,9 +95,22 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         @Override
         public void onClick(View v) {
 
-            post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
-                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","user","Tanta"
-                    ,"44-44-555");
+            amount = (quantity.getText().toString())+selectedItemSpinner;
+            government = addedGovernment.getText().toString();
+            area = addpostArea.getText().toString();
+            name = productname.getText().toString();
+            //Date = DateFormat.getDateInstance().toString();
+            productName = productname.getText().toString();
+
+            if(mandop.isChecked()){
+                userType="mandop";
+            }else if(client.isChecked()){
+                userType="user";
+            }
+
+            post = new UploadedPost(122,"01033450442","Tarek","Food",name,
+                    amount,"https://gp-mandoob-users.herokuapp.com/",government,userType,government
+                    ," ");
 
              retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -111,25 +124,27 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    System.out.println("Success");
+                    Toast.makeText(AddPost.this,"Posted Successfully"   ,Toast.LENGTH_SHORT );
+                    System.out.println("Successfully");
 
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-
+                    Toast.makeText(AddPost.this,"Fail"   ,Toast.LENGTH_SHORT );
                     System.out.println(t.getMessage().toString() + "Fail FAil FAil");
 
                 }
             });
+
+
         }
     });
 
-
-
     }
 
-  /*  private void uploadPost() {
+/*
+   private void uploadPost() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -173,8 +188,8 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
 
 
-    }*/
-
+    }
+*/
 
     // method to store the photo which captured in the image view
    /* @Override

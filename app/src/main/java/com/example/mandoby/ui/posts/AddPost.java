@@ -94,24 +94,48 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
     addPost.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            uploadPost();
 
+            post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
+                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
+                    ,"44-44-555");
+
+             retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            postInterface = retrofit.create(PostInterface.class);
+
+            call = postInterface.uploadClientPost(post);
+
+            call.enqueue(new Callback<UploadedPost>() {
+                @Override
+                public void onResponse(Call<UploadedPost> call, Response<UploadedPost> response) {
+                    Toast.makeText(AddPost.this,"Success"   ,Toast.LENGTH_SHORT );
+                }
+
+                @Override
+                public void onFailure(Call<UploadedPost> call, Throwable t) {
+
+                    System.out.println(t.getMessage().toString() + "Fail FAil FAil");
+
+                }
+            });
         }
     });
 
 
+
     }
 
-    private void uploadPost() {
+  /*  private void uploadPost() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         postInterface = retrofit.create(PostInterface.class);
-
-
-       // call = postInterface.uploadClientPost(post);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,75,byteArrayOutputStream);
@@ -126,28 +150,16 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         Date = DateFormat.getDateInstance().toString();
         productName = productname.getText().toString();
 
-        if(client.isChecked()){
-            userType = "client";
-            post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
-                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
-                    ,"44-44-555");
-            call = postInterface.uploadClientPost(post);
-
-        }else if(mandop.isChecked()){
-            userType = "mandop";
-            post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
-                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
-            ,"44-44-555");
-            call = postInterface.uploadClientPost(post);
-        }
-        else{
-            Toast.makeText(AddPost.this, "Please select you are mandop or client",Toast.LENGTH_LONG);
-            }
+        userType = "mandop";
+        post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
+                "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
+                ,"44-44-555");
+        call = postInterface.uploadClientPost(post);
 
         call.enqueue(new Callback<UploadedPost>() {
             @Override
             public void onResponse(Call<UploadedPost> call, Response<UploadedPost> response) {
-                Toast.makeText(AddPost.this,"Success",Toast.LENGTH_SHORT );
+                Toast.makeText(AddPost.this,"Success"   ,Toast.LENGTH_SHORT );
             }
 
             @Override
@@ -160,11 +172,11 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
 
 
-    }
+    }*/
 
 
     // method to store the photo which captured in the image view
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Uri uri = data.getData();
@@ -178,7 +190,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         }
 
     }
-
+*/
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();

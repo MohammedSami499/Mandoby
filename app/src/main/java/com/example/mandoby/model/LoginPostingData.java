@@ -1,24 +1,13 @@
 package com.example.mandoby.model;
 
-public class UserInfo {
+public class LoginPostingData {
     private String phone;
     private String otp;
-    private String name;
 
-    public UserInfo(String phone ) {
+    public LoginPostingData(String phone , String otp) {
         this.phone = phone;
+        this.otp = otp;
     }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
 
     public String getOtp() {
         return otp;

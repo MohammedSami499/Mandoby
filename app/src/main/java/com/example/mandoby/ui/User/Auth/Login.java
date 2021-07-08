@@ -83,7 +83,7 @@ public class Login extends AppCompatActivity {
 
                                 } else {
 
-                                Log.i("On not success", response.body().getOtp());
+                                Log.i("On not success", response.message());
                                 nextButton.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.INVISIBLE);
                             }
@@ -134,30 +134,31 @@ public class Login extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         nextButton.setVisibility(View.VISIBLE);
                         Toast.makeText(Login.this, "There is an error with this phone", Toast.LENGTH_SHORT).show();
+                        Log.i("Error :", e.getMessage());
                     }
 
                     @Override
                     public void onCodeSent(@NonNull @NotNull String sentOTP, @NonNull @NotNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         progressBar.setVisibility(View.GONE);
                         nextButton.setVisibility(View.VISIBLE);
-
-                        if (name == null){
-
+                        Toast.makeText(Login.this, "the name is " + name, Toast.LENGTH_SHORT).show();
+                        if (name.isEmpty()){
                             //new user
-                            intent = new Intent(getApplicationContext(), RegisterScreen.class);
+
+                            Log.i("The name" , name);
                             intent.putExtra("phone", phone);
                             intent.putExtra("Waled_otp", WaledOTP);
                             intent.putExtra("origin_otp", sentOTP);
                             startActivity(intent);
                         }else{
-
+                            Toast.makeText(Login.this, "the name is " + name, Toast.LENGTH_SHORT).show();
                             //user is already exists
                             intent = new Intent(getApplicationContext(), ConfirmLoginOtp.class);
                             intent.putExtra("phone", phone);
                             intent.putExtra("name", name);
                             intent.putExtra("Waled_otp", WaledOTP);
                             intent.putExtra("origin_otp", sentOTP);
-                            startActivity(intent);
+                            startService(intent);
                         }
 
 

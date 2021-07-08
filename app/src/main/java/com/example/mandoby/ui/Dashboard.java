@@ -77,7 +77,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 intent = new Intent(Dashboard.this, MandopPosts.class);
                 startActivity(intent);
             }});
-                    // navigator to mandop posts page
+        // navigator to mandop posts page
 
         userPosts.setOnClickListener(new View.OnClickListener(){
              Intent intent;
@@ -103,6 +103,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public boolean onNavigationItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
+
         return true;
     }
 

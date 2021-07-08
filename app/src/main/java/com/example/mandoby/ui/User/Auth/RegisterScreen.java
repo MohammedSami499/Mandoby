@@ -70,8 +70,6 @@ public class RegisterScreen extends AppCompatActivity {
         confirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("PinView", "pinView Data : "+ pinViewTOP.getText().toString());
-
 
 
                 if (pinViewTOP.getText().toString().isEmpty() ) {
@@ -102,9 +100,10 @@ public class RegisterScreen extends AppCompatActivity {
                                                 progressBar.setVisibility(View.GONE);
 
                                                 Intent intent = new Intent(getApplicationContext() , AddPost.class);
-                                                intent.putExtra("phone" , phone);
-                                                intent.putExtra("name" , user_name.getText().toString());
+                                                intent.putExtra("user_phone" , phone);
+                                                intent.putExtra("user_name" , user_name.getText().toString());
                                                 startActivity(intent);
+                                                finish();
                                             }else{
                                                 Toast.makeText(RegisterScreen.this, "an error occurred", Toast.LENGTH_SHORT).show();
                                             }

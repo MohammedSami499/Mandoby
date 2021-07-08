@@ -26,7 +26,7 @@
             android:text="Confirm"
             android:textSize="60sp"
             android:fontFamily="@font/baloo_bhai"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="50dp"
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:textAllCaps="true"/>
@@ -40,21 +40,37 @@
             android:textSize="17sp"
             android:textAlignment="center"
             />
-
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_gravity="left"
-            android:fontFamily="@font/baloo_bhai"
-            android:text="Enter the OTP message"
-            android:layout_marginLeft="13dp"
-            android:textColor="@color/lightBlack"
-            android:textSize="17sp" />
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:fontFamily="@font/baloo_bhai"
+                android:text="Enter the OTP message"
+                android:layout_marginLeft="13dp"
+                android:textColor="@color/lightBlack"
+                android:textSize="15sp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/resendOTPLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resend Code"
+                android:textColor="#ff0000"
+                android:textSize="17sp"
+                android:textAllCaps="true"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
 
         <com.chaos.view.PinView
-            android:id="@+id/otp_pinView"
+            android:id="@+id/otp_pinView_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:itemCount="6"
@@ -72,18 +88,35 @@
             app:itemRadius="5dp"
             />
 
-        <Button
-            android:id="@+id/register_confirm_btn"
+        <RelativeLayout
+            android:id="@+id/last_relative"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
-            android:background="@color/black"
-            android:elevation="5dp"
-            android:onClick="callVerifyOTPScreen"
-            android:text="Confirm"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            tools:ignore="OnClick" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <Button
+                android:id="@+id/login_confirm_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/black"
+                android:elevation="5dp"
+                android:onClick="callVerifyOTPScreen"
+                android:text="Confirm"
+                android:textSize="25sp"
+                android:textColor="@color/black"
+                tools:ignore="OnClick" />
+
+            <ProgressBar
+                android:id="@+id/otp_login_progressbar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@id/last_relative"
+                android:layout_marginTop="15dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                tools:ignore="NotSibling" />
+        </RelativeLayout>
 
 
     </LinearLayout>

@@ -22,7 +22,7 @@ import com.example.mandoby.ui.posts.MandopPosts;
 import com.google.android.material.navigation.NavigationView;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static boolean isLoggedIn = true;
+    public static boolean isLoggedIn = false;
 
     //Hooks
     ImageView AddPost;

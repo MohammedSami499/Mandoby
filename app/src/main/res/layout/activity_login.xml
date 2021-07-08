@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="30dp"
+    android:padding="10dp"
+    android:layout_marginTop="40dp"
     android:background="@color/white"
     tools:context=".ui.User.Auth.RegisterScreen">
     <LinearLayout
@@ -23,9 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mandoby"
-            android:textSize="70sp"
+            android:textSize="60sp"
             android:fontFamily="@font/baloo_bhai"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="50dp"
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:textAllCaps="true"/>
@@ -43,7 +44,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="25dp"
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -86,7 +87,7 @@
                     android:textColor="@color/black"
                     tools:ignore="OnClick" />
                 <ProgressBar
-                    android:id="@+id/login_progress"
+                    android:id="@+id/otp_register_progressbar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_below="@id/phone_text"

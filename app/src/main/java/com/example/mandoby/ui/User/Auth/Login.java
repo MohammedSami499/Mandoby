@@ -45,7 +45,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         nextButton = (Button) findViewById(R.id.next_btn);
         phoneNumET = (TextInputEditText) findViewById(R.id.phone_num_ET);
-        progressBar = (ProgressBar) findViewById(R.id.login_progress);
+        progressBar = (ProgressBar) findViewById(R.id.otp_register_progressbar);
 
 
         nextButton.setOnClickListener(new View.OnClickListener() {

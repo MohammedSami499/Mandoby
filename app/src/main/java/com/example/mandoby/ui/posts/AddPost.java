@@ -8,24 +8,42 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.mandoby.Network.UploadClientPost;
 import com.example.mandoby.R;
+import com.example.mandoby.model.Post;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddPost extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     ImageView product_photo,imgAddPost;
     Button take_photo,addPost;
-    TextView txtAddPost;
+    TextView productname,quantity, addedGovernment,addpostArea;
+    RadioButton client, mandop;
     Spinner spinner;
+    Post post;
+    String phone="01033450442",name="Tarek",selectedItemSpinner ,amount ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date , area
+            ,productType ="medical" , productName , government , userType;
+    int PostID= (int) Math.random();
+    Call<Post> call;
 
     private Bitmap bitmap;
     @Override
@@ -36,10 +54,16 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         product_photo =findViewById(R.id.imv_product_pic);
         take_photo = findViewById(R.id.btn_takephoto);
         imgAddPost=findViewById(R.id.add_post);
-        txtAddPost=findViewById(R.id.add_post_text);
         spinner=findViewById(R.id.spinner_type);
         addPost=findViewById(R.id.btn_addpost);
+        productname=findViewById(R.id.add_post_product_name);
+        quantity=findViewById(R.id.add_post_quantity);
+        addedGovernment =findViewById(R.id.add_post_Governorate);
+        addpostArea=findViewById(R.id.add_post_Area);
+        client=findViewById(R.id.rbClient);
+        mandop=findViewById(R.id.rbMandop);
 
+        // arranging the spinner body
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this
                 ,R.array.Unit, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -59,21 +83,53 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
             }
         });
 
-    imgAddPost.setOnClickListener(new View.OnClickListener() {
+    addPost.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(AddPost.this, MandopPosts.class);
-            startActivity(intent);
+            uploadPost();
         }
     });
 
-        txtAddPost.setOnClickListener(new View.OnClickListener() {
+
+    }
+
+    private void uploadPost() {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,75,byteArrayOutputStream);
+        byte[] imageInByte= byteArrayOutputStream.toByteArray();
+
+        String encodedImage = Base64.encodeToString(imageInByte,Base64.DEFAULT);
+
+        amount = (quantity.getText().toString())+selectedItemSpinner;
+        government = addedGovernment.getText().toString();
+        area = addpostArea.getText().toString();
+        name = productname.getText().toString();
+        Date = DateFormat.getDateInstance().toString();
+
+
+        if(client.isChecked()){
+            userType = "client";
+            post = new Post(PostID,phone,name,productType,amount,government,userType,area,Date);
+            call = UploadClientPost.getInstance().getApi().uploadClientPost(post);
+
+
+        }else{
+
+        }
+        call.enqueue(new Callback<Post>() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddPost.this, MandopPosts.class);
-                startActivity(intent);
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                Toast.makeText(AddPost.this,"Success",Toast.LENGTH_SHORT );
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Toast.makeText(AddPost.this,"Fail",Toast.LENGTH_SHORT );
             }
         });
+
+
+
     }
 
 
@@ -96,7 +152,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-
+        selectedItemSpinner= text;
     }
 
     @Override

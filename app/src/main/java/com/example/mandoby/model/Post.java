@@ -3,6 +3,7 @@ package com.example.mandoby.model;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.Date;
+import java.util.Random;
 
 public class Post {
 
@@ -17,7 +18,8 @@ public class Post {
     String Date;
 
 
-    public Post( String phone, String name, String productType, String amount, String government, String userType, String area, String date) {
+    public Post(int PostID, String phone, String name, String productType, String amount, String government, String userType, String area, String date) {
+        this.PostID = PostID;
         this.phone = phone;
         this.name = name;
         this.productType = productType;

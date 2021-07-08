@@ -23,6 +23,6 @@ public interface PostInterface {
 
 
 
-    @POST("getPostsForUser/user")
-    public Call <UploadedPost> uploadClientPost(@Body UploadedPost post);
+    @POST("add")
+    public Call <Void> uploadClientPost(@Body UploadedPost post);
 }

@@ -45,7 +45,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
     String phone="01033450442",name="Tarek",selectedItemSpinner ,amount ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date = "55555" , area
             ,productType ="Food" , productName , government , userType;
     int PostID= 155;
-    Call<UploadedPost> call;
+    Call<Void> call;
     private Bitmap bitmap;
 
 
@@ -96,7 +96,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         public void onClick(View v) {
 
             post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
-                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
+                    "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","user","Tanta"
                     ,"44-44-555");
 
              retrofit = new Retrofit.Builder()
@@ -108,14 +108,15 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
             call = postInterface.uploadClientPost(post);
 
-            call.enqueue(new Callback<UploadedPost>() {
+            call.enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<UploadedPost> call, Response<UploadedPost> response) {
-                    Toast.makeText(AddPost.this,"Success"   ,Toast.LENGTH_SHORT );
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    System.out.println("Success");
+
                 }
 
                 @Override
-                public void onFailure(Call<UploadedPost> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
 
                     System.out.println(t.getMessage().toString() + "Fail FAil FAil");
 

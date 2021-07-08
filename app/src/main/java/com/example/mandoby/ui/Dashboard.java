@@ -60,7 +60,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onClick(View v) {
                 if (isLoggedIn){
-                    intent = new Intent(Dashboard.this, com.example.mandoby.ui.posts.AddPost.class);
+                    intent = new Intent(Dashboard.this, AddPost.class);
                 }else{
                     intent = new Intent(Dashboard.this, Login.class);
                 }

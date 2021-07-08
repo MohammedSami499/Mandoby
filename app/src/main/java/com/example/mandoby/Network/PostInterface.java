@@ -1,6 +1,7 @@
 package com.example.mandoby.Network;
 
 import com.example.mandoby.model.Post;
+import com.example.mandoby.model.UploadedPost;
 
 import java.util.List;
 
@@ -23,5 +24,5 @@ public interface PostInterface {
     @Multipart
     @FormUrlEncoded
     @POST("getPostsForUser/user")
-    Call <Post> uploadClientPost(@Body Post post);
+    Call <UploadedPost> uploadClientPost(@Body UploadedPost post);
 }

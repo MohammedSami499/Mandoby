@@ -15,14 +15,14 @@ import retrofit2.http.POST;
 public interface PostInterface {
 
     @GET("getPostsForUser/mandop")
-    Call<List<Post>> getMandopPosts();
+   public  Call<List<Post>> getMandopPosts();
 
     @GET("getPostsForUser/user")
-    Call<List<Post>> getUsersPosts();
+    public Call<List<Post>> getUsersPosts();
 
 
-    @Multipart
-    @FormUrlEncoded
-    @POST("getPostsForUser/user")
-    Call <UploadedPost> uploadClientPost(@Body UploadedPost post);
+
+
+    @POST("add")
+    public Call <Void> uploadClientPost(@Body UploadedPost post);
 }

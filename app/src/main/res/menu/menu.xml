@@ -8,10 +8,11 @@
         <item
             android:id="@+id/add_post"
             android:title="Add Post"
-            android:icon="@drawable/add_post"/>
+            android:icon="@drawable/add_post"
+            />
         <item
             android:id="@+id/represents"
-            android:title="Representative Posts"
+            android:title="Mandop Posts"
             android:icon="@drawable/representative"/>
         <item
             android:id="@+id/clients"
@@ -31,7 +32,8 @@
                 <item
                     android:id="@+id/logout"
                     android:title="Logout"
-                    android:icon="@drawable/log_out"/>
+                    android:icon="@drawable/log_out"
+                    />
                 <item
                     android:id="@+id/login"
                     android:title="Login"

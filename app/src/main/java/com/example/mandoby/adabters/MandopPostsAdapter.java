@@ -3,6 +3,7 @@ package com.example.mandoby.adabters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +28,7 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
 
         holder.post.setText("hi , i have a specific amount of chepsi bacts i'am in "+postsList.get(position).getGovernment()+"government in "+postsList.get(position).getArea());
         //holder.productImage.setImageResource(post.prodImage);
-        holder.quantity.setText(postsList.get(position).getAmount());
+        holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
         holder.name.setText(postsList.get(position).getName());
         holder.date.setText(postsList.get(position).getDate());
     }
@@ -47,6 +48,7 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
 
       //  ShapeableImageView productImage;
         TextView post,quantity ,name,date;
+        Spinner unit;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,6 +58,8 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
             post = itemView.findViewById(R.id.mandop_post_body);
             quantity=itemView.findViewById(R.id.mandop_posts_quantity);
             date=itemView.findViewById(R.id.mandop_posts_date);
+            unit=itemView.findViewById(R.id.spinner_type);
+
         }
     }
 }

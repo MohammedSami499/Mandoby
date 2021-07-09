@@ -7,29 +7,57 @@ import java.util.Random;
 
 public class Post {
 
-    int PostID;
+    int PostID, amount;
     String phone;
     String name;
     String productType;
-    String amount;
+    String productName;
+    String unit;
     String government;
     String userType;
     String area;
     String Date;
 
+    public int getAmount() {
+        return amount;
+    }
 
-    public Post(int PostID, String phone, String name, String productType, String amount, String government, String userType, String area, String date) {
-        this.PostID = PostID;
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public Post(int postID, int amount, String phone, String name
+            , String productType, String productName, String unit,
+                String government, String userType, String area, String date)
+    {
+        PostID = postID;
+        this.amount = amount;
         this.phone = phone;
         this.name = name;
         this.productType = productType;
-        this.amount = amount;
+        this.productName = productName;
+        this.unit = unit;
         this.government = government;
         this.userType = userType;
         this.area = area;
         Date = date;
     }
-
 
     public int getPostID() {
         return PostID;
@@ -61,14 +89,6 @@ public class Post {
 
     public void setProductType(String productType) {
         this.productType = productType;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
     }
 
     public String getGovernment() {

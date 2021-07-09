@@ -12,11 +12,13 @@ import com.example.mandoby.R;
 import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.viewModels.ClientPostViewModel;
+import com.example.mandoby.viewModels.MandopPostViewModel;
+
 import java.util.List;
 
 public class MandopPosts extends AppCompatActivity {
 
-    ClientPostViewModel postViewModel;
+    MandopPostViewModel postViewModel;
 
 
     @Override
@@ -26,7 +28,7 @@ public class MandopPosts extends AppCompatActivity {
 
         setContentView(R.layout.activity_mandop_posts);
 
-        postViewModel = ViewModelProviders.of(this).get(ClientPostViewModel.class);
+        postViewModel = ViewModelProviders.of(this).get(MandopPostViewModel.class);
         postViewModel.getPosts();
         RecyclerView recyclerView= findViewById(R.id.RV_posts);
         MandopPostsAdapter myAdapter= new MandopPostsAdapter();

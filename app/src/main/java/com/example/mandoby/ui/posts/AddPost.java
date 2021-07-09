@@ -37,14 +37,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AddPost extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     ImageView product_photo,imgAddPost;
     Button take_photo,addPost;
-    TextView productname,quantity, addedGovernment,addpostArea;
+    TextView productname,quantity, addedGovernment,addpostArea,producttype;
     RadioButton client, mandop;
     Spinner spinner;
     UploadedPost post;
 
-    String phone="01033450442",name="Tarek",selectedItemSpinner ,amount ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date = "55555" , area
-            ,productType ="Food" , productName , government , userType;
-    int PostID= 155;
+    String phone="01033450442",name="Tarek",selectedItemSpinner  ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date = "55555" , area
+            ,productType , productName , government , userType;
+
+    String imageurl ="https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.theconversation.com%2Ffiles%2F334114%2Foriginal%2Ffile-20200511-49558-palxym.jpg%3Fixlib%3Drb-1.1.0%26q%3D45%26auto%3Dformat%26w%3D1200%26h%3D1200.0%26fit%3Dcrop&imgrefurl=https%3A%2F%2Ftheconversation.com%2Fcovid-19-pandemic-is-our-chance-to-learn-how-to-reuse-old-medicines-137671&tbnid=SvCuuruTmBnGwM&vet=12ahUKEwjNu6iGgdfxAhXJuqQKHasUB9wQ";
+    int PostID= 155 , amount;
     Call<Void> call;
     private Bitmap bitmap;
 
@@ -65,6 +67,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         spinner=findViewById(R.id.spinner_type);
         addPost=findViewById(R.id.btn_addpost);
         productname=findViewById(R.id.add_post_product_name);
+        producttype=findViewById(R.id.add_post_product_type);
         quantity=findViewById(R.id.add_post_quantity);
         addedGovernment =findViewById(R.id.add_post_Governorate);
         addpostArea=findViewById(R.id.add_post_Area);
@@ -95,12 +98,14 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         @Override
         public void onClick(View v) {
 
-            amount = (quantity.getText().toString())+selectedItemSpinner;
+            amount = Integer.parseInt(quantity.getText().toString());
+
             government = addedGovernment.getText().toString();
             area = addpostArea.getText().toString();
             name = productname.getText().toString();
             //Date = DateFormat.getDateInstance().toString();
             productName = productname.getText().toString();
+            productType=producttype.getText().toString();
 
             if(mandop.isChecked()){
                 userType="mandop";
@@ -108,9 +113,8 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
                 userType="user";
             }
 
-            post = new UploadedPost(122,"01033450442","Tarek","Food",name,
-                    amount,"https://gp-mandoob-users.herokuapp.com/",government,userType,government
-                    ," ");
+            post = new UploadedPost(122,amount,"01033450442","ALi",productType,productName,selectedItemSpinner
+            ,imageurl,government,userType,area,"");
 
              retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -124,14 +128,14 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    Toast.makeText(AddPost.this,"Posted Successfully"   ,Toast.LENGTH_SHORT );
+                    Toast.makeText(getApplicationContext(),"Posted Successfully"   ,Toast.LENGTH_LONG ).show();
                     System.out.println("Successfully");
 
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(AddPost.this,"Fail"   ,Toast.LENGTH_SHORT );
+                    Toast.makeText(getApplicationContext(),"Fail"   ,Toast.LENGTH_SHORT ).show();
                     System.out.println(t.getMessage().toString() + "Fail FAil FAil");
 
                 }
@@ -143,70 +147,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
     }
 
-/*
-   private void uploadPost() {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        postInterface = retrofit.create(PostInterface.class);
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,75,byteArrayOutputStream);
-        byte[] imageInByte= byteArrayOutputStream.toByteArray();
-
-        String encodedImage = Base64.encodeToString(imageInByte,Base64.DEFAULT);
-
-        amount = (quantity.getText().toString())+selectedItemSpinner;
-        government = addedGovernment.getText().toString();
-        area = addpostArea.getText().toString();
-        name = productname.getText().toString();
-        Date = DateFormat.getDateInstance().toString();
-        productName = productname.getText().toString();
-
-        userType = "mandop";
-        post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
-                "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
-                ,"44-44-555");
-        call = postInterface.uploadClientPost(post);
-
-        call.enqueue(new Callback<UploadedPost>() {
-            @Override
-            public void onResponse(Call<UploadedPost> call, Response<UploadedPost> response) {
-                Toast.makeText(AddPost.this,"Success"   ,Toast.LENGTH_SHORT );
-            }
-
-            @Override
-            public void onFailure(Call<UploadedPost> call, Throwable t) {
-
-                System.out.println(t.getMessage().toString());
-
-                    }
-        });
-
-
-
-    }
-*/
-
-    // method to store the photo which captured in the image view
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Uri uri = data.getData();
-
-        try {
-            bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-            product_photo.setImageBitmap(bitmap);
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-*/
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();

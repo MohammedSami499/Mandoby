@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.chaos.view.PinView;
 import com.example.mandoby.Network.MandInterface;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.model.LoginPostingData;
 import com.example.mandoby.model.RegisterData;
@@ -67,6 +68,8 @@ public class ConfirmLoginOtp extends AppCompatActivity {
         String waledOTP = intent.getStringExtra("Waled_otp");
         OTPVerificationID = getIntent().getStringExtra("origin_otp");
 
+        Toast.makeText(this, "the otp " + OTPVerificationID.toString(), Toast.LENGTH_SHORT).show();
+
         confirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +104,11 @@ public class ConfirmLoginOtp extends AppCompatActivity {
                                                 Intent intent = new Intent(getApplicationContext() , AddPost.class);
                                                 intent.putExtra("user_phone" , phone);
                                                 intent.putExtra("user_name" , userName);
+
+                                                //Create the user Session to save it's data
+                                                Sessions userSession = new Sessions(ConfirmLoginOtp.this);
+                                                userSession.createLoginSession(true, userName, phone);
+
                                                 startActivity(intent);
                                                 finish();
                                             }else{

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="195dp"
-    android:background="  #b5e4d7 "
+    android:background="#C7DFD9"
     android:orientation="vertical"
     >
     <TextView
@@ -13,7 +13,7 @@
         android:layout_marginTop="35dp"
         android:fontFamily="@font/baloo_bhai"
         android:text="Mandoby"
-        android:textSize="50dp"
+        android:textSize="45dp"
         android:layout_marginLeft="15dp"
         android:textColor="@color/lightBlack"
         android:includeFontPadding="false"
@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Navigate throw Mandoby now"
+        android:text="ًWhatever you need is in your hand now"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="5dp"
         android:includeFontPadding="false"

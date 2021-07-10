@@ -131,8 +131,9 @@
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dashboard_clients_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="350dp"
                 android:layout_marginLeft="7dp"
                 />
         </LinearLayout>
@@ -177,8 +178,9 @@
                     />
             </RelativeLayout>
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dashboard_mandop_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="320dp"
                 android:layout_marginLeft="7dp"
                 />
         </LinearLayout>

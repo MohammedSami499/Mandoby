@@ -1,9 +1,11 @@
 package com.example.mandoby.ui.User.Auth;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,8 +37,8 @@ public class Login extends AppCompatActivity {
     TextInputEditText phoneNumET;
     String phone ;
     ProgressBar progressBar;
-    Intent intent;
     String WaledOTP;
+
 
     String LogInURL = "https://mandoop-auth-service.herokuapp.com/";
     @Override
@@ -141,24 +143,25 @@ public class Login extends AppCompatActivity {
                     public void onCodeSent(@NonNull @NotNull String sentOTP, @NonNull @NotNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         progressBar.setVisibility(View.GONE);
                         nextButton.setVisibility(View.VISIBLE);
-                        Toast.makeText(Login.this, "the name is " + name, Toast.LENGTH_SHORT).show();
-                        if (name.isEmpty()){
-                            //new user
+                        Log.i("FirebaseOTP", sentOTP);
+                        if (name==null){
 
-                            Log.i("The name" , name);
+                            //new user
+                            Intent intent = new Intent(Login.this , RegisterScreen.class);
                             intent.putExtra("phone", phone);
                             intent.putExtra("Waled_otp", WaledOTP);
                             intent.putExtra("origin_otp", sentOTP);
                             startActivity(intent);
                         }else{
                             Toast.makeText(Login.this, "the name is " + name, Toast.LENGTH_SHORT).show();
+
                             //user is already exists
-                            intent = new Intent(getApplicationContext(), ConfirmLoginOtp.class);
+                            Intent intent = new Intent(Login.this, ConfirmLoginOtp.class);
                             intent.putExtra("phone", phone);
                             intent.putExtra("name", name);
                             intent.putExtra("Waled_otp", WaledOTP);
                             intent.putExtra("origin_otp", sentOTP);
-                            startService(intent);
+                            startActivity(intent);
                         }
 
 

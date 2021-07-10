@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.chaos.view.PinView;
 import com.example.mandoby.Network.MandInterface;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.model.RegisterData;
 import com.example.mandoby.model.UserInfo;
@@ -55,8 +58,8 @@ public class RegisterScreen extends AppCompatActivity {
         //hooks
         setContentView(R.layout.activity_register_screen);
         user_name = (TextInputEditText) findViewById(R.id.user_name);
-        confirmationButton = (Button)  findViewById(R.id.register_confirm_btn);
-        pinViewTOP =(PinView)findViewById(R.id.otp_pinView);
+        confirmationButton = (Button) findViewById(R.id.register_confirm_btn);
+        pinViewTOP = (PinView) findViewById(R.id.otp_pinView);
         progressBar = findViewById(R.id.otp_register_progressbar);
         ResendOTP = (TextView) findViewById(R.id.resendOTP);
         OTPVerificationID = getIntent().getStringExtra("origin_otp");
@@ -72,13 +75,13 @@ public class RegisterScreen extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if (pinViewTOP.getText().toString().isEmpty() ) {
+                if (pinViewTOP.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterScreen.this, "Enter a valid OTP", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
 
                     userEnteredOTP = pinViewTOP.getText().toString();
 
-                    if(OTPVerificationID != null){
+                    if (OTPVerificationID != null) {
                         confirmationButton.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.VISIBLE);
 
@@ -92,22 +95,27 @@ public class RegisterScreen extends AppCompatActivity {
                                     public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                                         confirmationButton.setVisibility(View.INVISIBLE);
                                         progressBar.setVisibility(View.VISIBLE);
-                                        if (task.isSuccessful()){ // the entered code is right
-                                            retrofitPostingConfirmationData(phone , otp ,user_name.getText().toString() );
+                                        if (task.isSuccessful()) { // the entered code is right
+                                            retrofitPostingConfirmationData(phone, otp, user_name.getText().toString());
 
-                                            if(connectionToServer){
+                                            if (connectionToServer) {
                                                 confirmationButton.setVisibility(View.VISIBLE);
                                                 progressBar.setVisibility(View.GONE);
 
-                                                Intent intent = new Intent(getApplicationContext() , AddPost.class);
-                                                intent.putExtra("user_phone" , phone);
-                                                intent.putExtra("user_name" , user_name.getText().toString());
+                                                Intent intent = new Intent(getApplicationContext(), AddPost.class);
+                                                intent.putExtra("user_phone", phone);
+                                                intent.putExtra("user_name", user_name.getText().toString());
+
+                                                //Create the user Session to save it's data
+                                                Sessions userSession = new Sessions(RegisterScreen.this);
+                                                userSession.createLoginSession(true, user_name.getText().toString(), phone);
+
                                                 startActivity(intent);
                                                 finish();
-                                            }else{
+                                            } else {
                                                 Toast.makeText(RegisterScreen.this, "an error occurred", Toast.LENGTH_SHORT).show();
                                             }
-                                        }else{
+                                        } else {
                                             confirmationButton.setVisibility(View.VISIBLE);
                                             progressBar.setVisibility(View.GONE);
                                             Toast.makeText(RegisterScreen.this, "Enter a valid otp", Toast.LENGTH_SHORT).show();
@@ -124,9 +132,9 @@ public class RegisterScreen extends AppCompatActivity {
 
     }
 
-    private void retrofitPostingConfirmationData(String phone , String otp , String userName) {
+    private void retrofitPostingConfirmationData(String phone, String otp, String userName) {
 
-        registerData = new RegisterData(phone , otp , userName);
+        registerData = new RegisterData(phone, otp, userName);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -137,9 +145,9 @@ public class RegisterScreen extends AppCompatActivity {
         userInfoCall.enqueue(new Callback<RegisterData>() {
             @Override
             public void onResponse(Call<RegisterData> call, Response<RegisterData> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Toast.makeText(RegisterScreen.this, "You are done", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     connectionToServer = false;
                 }
 

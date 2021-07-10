@@ -20,7 +20,9 @@
         <activity android:name=".ui.User.Auth.RegisterScreen" />
         <activity android:name=".ui.User.Auth.Login" />
         <activity android:name=".ui.Dashboard" />
+        <activity android:name=".ui.User.Auth.ConfirmLoginOtp"/>
         <activity android:name=".ui.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

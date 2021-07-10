@@ -28,7 +28,7 @@ public class ClientPosts extends AppCompatActivity {
         postViewModel.getPosts();
         RecyclerView recyclerView= findViewById(R.id.RV_posts);
         ClientPostsAdapter myAdapter= new ClientPostsAdapter();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.HORIZONTAL , false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.VERTICAL , false));
         recyclerView.setAdapter(myAdapter);
         postViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
             @Override

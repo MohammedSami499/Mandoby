@@ -25,6 +25,7 @@ import com.example.mandoby.R;
 import com.example.mandoby.adabters.ClientPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.ui.User.Auth.Login;
+import com.example.mandoby.ui.User.Auth.RegisterScreen;
 import com.example.mandoby.ui.posts.AddPost;
 import com.example.mandoby.ui.posts.ClientPosts;
 import com.example.mandoby.ui.posts.MandopPosts;
@@ -170,6 +171,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 Intent intent4 = new Intent(this, ClientPosts.class);
                 startActivity(intent4);
                 break;
+            case (R.id.login):
+            Intent intent5 = new Intent(this, RegisterScreen.class);
+            startActivity(intent5);
+            break;
 
         }
 

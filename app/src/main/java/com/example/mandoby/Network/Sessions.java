@@ -12,8 +12,8 @@ public class Sessions {
     Context context;
 
     private static final String isLoggedIn = "IsLoggedIn";
-    private static final String UserName = "UserName";
-    private static final String PhoneNumber = "PhoneNumber";
+    public static final String UserName = "UserName";
+    public static final String PhoneNumber = "PhoneNumber";
 
     public Sessions(Context context){
         this.context = context;

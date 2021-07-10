@@ -1,6 +1,5 @@
 package com.example.mandoby.adabters;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +8,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Post;
 import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

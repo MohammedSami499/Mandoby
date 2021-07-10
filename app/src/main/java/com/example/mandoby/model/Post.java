@@ -9,10 +9,20 @@ public class Post {
 
     int PostID, amount;
     String phone;
+
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
     String name;
     String productType;
     String productName;
     String unit;
+    String imageurl;
     String government;
     String userType;
     String area;

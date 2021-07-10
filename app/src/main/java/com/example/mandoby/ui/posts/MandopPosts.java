@@ -23,9 +23,7 @@ public class MandopPosts extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-            super.onCreate(savedInstanceState);
-
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mandop_posts);
 
         postViewModel = ViewModelProviders.of(this).get(MandopPostViewModel.class);

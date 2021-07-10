@@ -1,15 +1,21 @@
 package com.example.mandoby.ui.posts;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,12 +27,26 @@ import android.widget.Toast;
 
 import com.example.mandoby.Network.PostInterface;
 import com.example.mandoby.R;
+import com.example.mandoby.model.Model;
 import com.example.mandoby.model.UploadedPost;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,14 +62,16 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
     Spinner spinner;
     UploadedPost post;
 
-    String phone="01033450442",name="Tarek",selectedItemSpinner  ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date = "55555" , area
+    String phone="01033450442",name="Tarek",selectedItemSpinner ,Date = "55555" , area
             ,productType , productName , government , userType;
 
-    String imageurl ="https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.theconversation.com%2Ffiles%2F334114%2Foriginal%2Ffile-20200511-49558-palxym.jpg%3Fixlib%3Drb-1.1.0%26q%3D45%26auto%3Dformat%26w%3D1200%26h%3D1200.0%26fit%3Dcrop&imgrefurl=https%3A%2F%2Ftheconversation.com%2Fcovid-19-pandemic-is-our-chance-to-learn-how-to-reuse-old-medicines-137671&tbnid=SvCuuruTmBnGwM&vet=12ahUKEwjNu6iGgdfxAhXJuqQKHasUB9wQ";
-    int PostID= 155 , amount;
+    String imageUrl ;
+    int amount;
     Call<Void> call;
-    private Bitmap bitmap;
-
+    Uri imageURI;
+    private static final int IMAGE_REQUEST = 2;
+    private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Image");
+    private StorageReference reference = FirebaseStorage.getInstance().getReference();
 
     private static final String BASE_URL = "https://gp-mandoob-orders.herokuapp.com/";
     private PostInterface postInterface;
@@ -86,13 +108,11 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         take_photo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                ImagePicker.Companion.with(AddPost.this)
-                        .crop()	    			//Crop image(Optional), Check Customization for more option
-                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
+                choosePhoto();
             }
         });
+
+        // action when the button of add post is clicked
 
     addPost.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -113,8 +133,8 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
                 userType="user";
             }
 
-            post = new UploadedPost(122,amount,"01033450442","ALi",productType,productName,selectedItemSpinner
-            ,imageurl,government,userType,area,"");
+            post = new UploadedPost(122,amount,"01033450442","zaki",productType,productName,selectedItemSpinner
+            ,imageUrl,government,userType,area,"");
 
              retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -144,6 +164,82 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
         }
     });
+
+    }
+
+    private void choosePhoto() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK && data!=null&& data.getData()!= null){
+            imageURI = data.getData();
+            product_photo.setImageURI(imageURI);
+            uploadPhoto();
+        }
+        else{
+            System.out.println("Error Error Error ");
+        }
+    }
+
+    private void uploadPhoto() {
+        if(imageURI !=null){
+            uploadToFirebase(imageURI);
+        }else{
+            Toast.makeText(getApplicationContext(),"please select an Image",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void uploadToFirebase(Uri uri ){
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Uploading image...");
+        pd.show();
+
+
+        final String randomKey = UUID.randomUUID().toString();
+        StorageReference fileRef = reference.child("images/"+randomKey);
+        fileRef.putFile(uri)
+               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Model model = new Model(uri.toString());
+                        imageUrl = uri.toString();
+                        String modelID = root.push().getKey();
+                        root.child(modelID).setValue(model);
+                        Toast.makeText(getApplicationContext(),"Uploading Successfully ",Toast.LENGTH_LONG).show();
+
+                    }
+                });
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull @NotNull UploadTask.TaskSnapshot taskSnapshot) {
+                double progressPercent =(100.00 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                pd.setMessage("Percentage : "+(int) progressPercent +"%");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Uploading Failed !!",Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    private String getFileExtension(Uri muri) {
+
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(muri));
 
     }
 

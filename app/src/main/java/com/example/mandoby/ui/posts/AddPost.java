@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mandoby.Network.PostInterface;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Model;
 import com.example.mandoby.model.UploadedPost;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -133,7 +135,13 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
                 userType="user";
             }
 
-            post = new UploadedPost(122,amount,"01033450442","Tarek",productType,productName,selectedItemSpinner
+            //bringing the current user data
+            Sessions sessionsUser = new Sessions(AddPost.this);
+            HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
+            String userName = userDataFromSession.get(Sessions.UserName);
+
+
+            post = new UploadedPost(122,amount,"01033450442",userName,productType,productName,selectedItemSpinner
             ,imageUrl,government,userType,area,"");
 
              retrofit = new Retrofit.Builder()

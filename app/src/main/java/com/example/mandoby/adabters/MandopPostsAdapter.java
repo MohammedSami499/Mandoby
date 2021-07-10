@@ -43,10 +43,7 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
     @Override
     public void onBindViewHolder(@NonNull @NotNull MandopPostsAdapter.PostViewHolder holder, int position) {
 
-        Sessions sessionsUser = new Sessions(holder.itemView.getContext());
-        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
-        String userName = userDataFromSession.get(Sessions.UserName);
-        String userPhone = userDataFromSession.get(Sessions.PhoneNumber);
+
 
 
         holder.post.setText("hi , i have a specific amount of "
@@ -57,7 +54,7 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
                 +postsList.get(position).getArea());
 
         holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
-        holder.name.setText(userName);
+        holder.name.setText(postsList.get(position).getName());
         holder.date.setText(postsList.get(position).getDate());
         holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
         Glide.with(holder.itemView).load(postsList.get(position).getImageurl()).into(holder.productImage);

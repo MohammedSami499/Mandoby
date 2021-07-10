@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,6 +54,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     MandopPostViewModel mandopPostViewModel;
 
 
+    Menu menu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,14 +101,17 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawerLayout.addDrawerListener(toggle);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.home_nav);
 
+        //user session
+        Sessions sessions = new Sessions(Dashboard.this);
 
         // the adding post details
         AddPost = (ImageView) findViewById(R.id.add_post);
         AddPost.setClickable(true);
 
 
-        Sessions sessions = new Sessions(Dashboard.this);
+
         AddPost.setOnClickListener(new View.OnClickListener() {
             Intent intent;
 
@@ -116,7 +121,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 if (sessions.checkLogin()) {
                     intent = new Intent(Dashboard.this, AddPost.class);
                 } else {
-                    intent = new Intent(Dashboard.this, AddPost.class);
+                    intent = new Intent(Dashboard.this, Login.class);
                 }
                 startActivity(intent);
             }
@@ -146,6 +151,18 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
 
         });
+
+        //hiding and showing items
+        menu = navigationView.getMenu();
+        if (sessions.checkLogin()){
+            menu.findItem(R.id.login).setVisible(false);
+            menu.findItem(R.id.profile).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }else{
+            menu.findItem(R.id.profile).setVisible(false);
+            menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.login).setVisible(true);
+        }
         
     }
 
@@ -161,18 +178,31 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         }
     }
 
+    // navigating throw navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
 
+
+        Sessions sessions = new Sessions(Dashboard.this);
+        boolean isLoggedIn = sessions.checkLogin();
+
         switch (item.getItemId()) {
             case R.id.profile:
-                Intent intent = new Intent(this, profile.class);
-                startActivity(intent);
-                break;
+                    Intent intent = new Intent(this, profile.class);
+                    startActivity(intent);
+                    break;
+
             case (R.id.add_post):
-                Intent intent2 = new Intent(this, AddPost.class);
-                startActivity(intent2);
-                break;
+                if (isLoggedIn){
+                    Intent intent2 = new Intent(this, AddPost.class);
+                    startActivity(intent2);
+                    break;
+                }else{
+                    Intent intent2 = new Intent(this, Login.class);
+                    startActivity(intent2);
+                    break;
+                }
+
             case (R.id.represents):
                 Intent intent3 = new Intent(this, MandopPosts.class);
                 startActivity(intent3);
@@ -182,23 +212,22 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(intent4);
                 break;
             case (R.id.login):
-            Intent intent5 = new Intent(this, RegisterScreen.class);
+            Intent intent5 = new Intent(this, Login .class);
             startActivity(intent5);
             break;
 
             case (R.id.logout):
-                Sessions sessions = new Sessions(Dashboard.this);
                 sessions.logoutUserFromSession();
                 Toast.makeText(this, "You Logged out", Toast.LENGTH_SHORT).show();
+                menu.findItem(R.id.profile).setVisible(false);
+                menu.findItem(R.id.logout).setVisible(false);
+                menu.findItem(R.id.login).setVisible(true);
                 break;
-
+            case (R.id.home_nav):
+                break;
         }
-
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
 
 }

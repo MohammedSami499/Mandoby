@@ -30,19 +30,16 @@ public class ClientPostsAdapter extends RecyclerView.Adapter<ClientPostsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ClientPostsAdapter.PostViewHolder holder, int position) {
-        Sessions sessionsUser = new Sessions(holder.itemView.getContext());
-        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
-        String userName = userDataFromSession.get(Sessions.UserName);
 
             holder.post.setText("hi , i need a specific amount of "
                     +postsList.get(position).getProductName()
-                    +" i'am in "
+                    +" \n i'am in "
                     +postsList.get(position).getGovernment()
-                    + " government in "
+                    + "\n government in "
                     +postsList.get(position).getArea());
 
             holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
-        holder.name.setText(userName);
+        holder.name.setText(postsList.get(position).getName());
             holder.date.setText(postsList.get(position).getDate());
             holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
         //URL url = new URL(postsList.get(position).getImageurl());

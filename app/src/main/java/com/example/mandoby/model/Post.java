@@ -11,18 +11,18 @@ public class Post {
     String phone;
 
     public String getImageurl() {
-        return imageurl;
+        return imageUrl;
     }
 
     public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+        this.imageUrl = imageurl;
     }
 
     String name;
     String productType;
     String productName;
     String unit;
-    String imageurl;
+    String imageUrl;
     String government;
     String userType;
     String area;

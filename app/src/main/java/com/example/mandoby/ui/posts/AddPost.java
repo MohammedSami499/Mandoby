@@ -1,15 +1,21 @@
 package com.example.mandoby.ui.posts;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,12 +27,26 @@ import android.widget.Toast;
 
 import com.example.mandoby.Network.PostInterface;
 import com.example.mandoby.R;
+import com.example.mandoby.model.Model;
 import com.example.mandoby.model.UploadedPost;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,17 +57,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AddPost extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     ImageView product_photo,imgAddPost;
     Button take_photo,addPost;
-    TextView productname,quantity, addedGovernment,addpostArea;
+    TextView productname,quantity, addedGovernment,addpostArea,producttype;
     RadioButton client, mandop;
     Spinner spinner;
     UploadedPost post;
 
-    String phone="01033450442",name="Tarek",selectedItemSpinner ,amount ,imageUrl="https://gp-mandoob-users.herokuapp.com/" ,Date = "55555" , area
-            ,productType ="Food" , productName , government , userType;
-    int PostID= 155;
-    Call<Void> call;
-    private Bitmap bitmap;
+    String phone="01033450442",name="Tarek",selectedItemSpinner ,Date = "55555" , area
+            ,productType , productName , government , userType;
 
+    String imageUrl ;
+    int amount;
+    Call<Void> call;
+    Uri imageURI;
+    private static final int IMAGE_REQUEST = 2;
+    private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Image");
+    private StorageReference reference = FirebaseStorage.getInstance().getReference();
 
     private static final String BASE_URL = "https://gp-mandoob-orders.herokuapp.com/";
     private PostInterface postInterface;
@@ -65,6 +89,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         spinner=findViewById(R.id.spinner_type);
         addPost=findViewById(R.id.btn_addpost);
         productname=findViewById(R.id.add_post_product_name);
+        producttype=findViewById(R.id.add_post_product_type);
         quantity=findViewById(R.id.add_post_quantity);
         addedGovernment =findViewById(R.id.add_post_Governorate);
         addpostArea=findViewById(R.id.add_post_Area);
@@ -83,24 +108,24 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         take_photo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                ImagePicker.Companion.with(AddPost.this)
-                        .crop()	    			//Crop image(Optional), Check Customization for more option
-                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
+                choosePhoto();
             }
         });
+
+        // action when the button of add post is clicked
 
     addPost.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-            amount = (quantity.getText().toString())+selectedItemSpinner;
+            amount = Integer.parseInt(quantity.getText().toString());
+
             government = addedGovernment.getText().toString();
             area = addpostArea.getText().toString();
             name = productname.getText().toString();
             //Date = DateFormat.getDateInstance().toString();
             productName = productname.getText().toString();
+            productType=producttype.getText().toString();
 
             if(mandop.isChecked()){
                 userType="mandop";
@@ -108,9 +133,8 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
                 userType="user";
             }
 
-            post = new UploadedPost(122,"01033450442","Tarek","Food",name,
-                    amount,"https://gp-mandoob-users.herokuapp.com/",government,userType,government
-                    ," ");
+            post = new UploadedPost(122,amount,"01033450442","zaki",productType,productName,selectedItemSpinner
+            ,imageUrl,government,userType,area,"");
 
              retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -124,14 +148,14 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    Toast.makeText(AddPost.this,"Posted Successfully"   ,Toast.LENGTH_SHORT );
+                    Toast.makeText(getApplicationContext(),"Posted Successfully"   ,Toast.LENGTH_LONG ).show();
                     System.out.println("Successfully");
 
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(AddPost.this,"Fail"   ,Toast.LENGTH_SHORT );
+                    Toast.makeText(getApplicationContext(),"Fail"   ,Toast.LENGTH_SHORT ).show();
                     System.out.println(t.getMessage().toString() + "Fail FAil FAil");
 
                 }
@@ -143,70 +167,83 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
     }
 
-/*
-   private void uploadPost() {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        postInterface = retrofit.create(PostInterface.class);
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,75,byteArrayOutputStream);
-        byte[] imageInByte= byteArrayOutputStream.toByteArray();
-
-        String encodedImage = Base64.encodeToString(imageInByte,Base64.DEFAULT);
-
-        amount = (quantity.getText().toString())+selectedItemSpinner;
-        government = addedGovernment.getText().toString();
-        area = addpostArea.getText().toString();
-        name = productname.getText().toString();
-        Date = DateFormat.getDateInstance().toString();
-        productName = productname.getText().toString();
-
-        userType = "mandop";
-        post = new UploadedPost(122,"01033450442","Tarek","Food","Tiger",
-                "155 carton","https://gp-mandoob-users.herokuapp.com/","Gharbia","Client","Tanta"
-                ,"44-44-555");
-        call = postInterface.uploadClientPost(post);
-
-        call.enqueue(new Callback<UploadedPost>() {
-            @Override
-            public void onResponse(Call<UploadedPost> call, Response<UploadedPost> response) {
-                Toast.makeText(AddPost.this,"Success"   ,Toast.LENGTH_SHORT );
-            }
-
-            @Override
-            public void onFailure(Call<UploadedPost> call, Throwable t) {
-
-                System.out.println(t.getMessage().toString());
-
-                    }
-        });
-
-
-
+    private void choosePhoto() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
     }
-*/
 
-    // method to store the photo which captured in the image view
-   /* @Override
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri uri = data.getData();
-
-        try {
-            bitmap= MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-            product_photo.setImageBitmap(bitmap);
-
-        }catch (IOException e){
-            e.printStackTrace();
+        if(requestCode == 1 && resultCode == RESULT_OK && data!=null&& data.getData()!= null){
+            imageURI = data.getData();
+            product_photo.setImageURI(imageURI);
+            uploadPhoto();
         }
+        else{
+            System.out.println("Error Error Error ");
+        }
+    }
+
+    private void uploadPhoto() {
+        if(imageURI !=null){
+            uploadToFirebase(imageURI);
+        }else{
+            Toast.makeText(getApplicationContext(),"please select an Image",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void uploadToFirebase(Uri uri ){
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Uploading image...");
+        pd.show();
+
+
+        final String randomKey = UUID.randomUUID().toString();
+        StorageReference fileRef = reference.child("images/"+randomKey);
+        fileRef.putFile(uri)
+               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Model model = new Model(uri.toString());
+                        imageUrl = uri.toString();
+                        String modelID = root.push().getKey();
+                        root.child(modelID).setValue(model);
+                        Toast.makeText(getApplicationContext(),"Uploading Successfully ",Toast.LENGTH_LONG).show();
+
+                    }
+                });
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull @NotNull UploadTask.TaskSnapshot taskSnapshot) {
+                double progressPercent =(100.00 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                pd.setMessage("Percentage : "+(int) progressPercent +"%");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Uploading Failed !!",Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    private String getFileExtension(Uri muri) {
+
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(muri));
 
     }
-*/
+
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();

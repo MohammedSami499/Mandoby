@@ -83,13 +83,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="10" />
+            android:text="10"
+            android:gravity="center"
+            />
 
         <TextView
             android:id="@+id/tv_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="orders" />
 
         <TextView
@@ -97,6 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="8" />
 
         <TextView
@@ -104,7 +108,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="posts" />
+            android:text="posts"
+            android:gravity="center"
+            />
     </LinearLayout>
 
     <View

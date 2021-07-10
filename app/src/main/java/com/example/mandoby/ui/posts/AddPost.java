@@ -235,14 +235,6 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
         });
     }
 
-    private String getFileExtension(Uri muri) {
-
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(muri));
-
-    }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

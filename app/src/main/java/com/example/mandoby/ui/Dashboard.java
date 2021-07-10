@@ -106,7 +106,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 if (sessions.checkLogin()) {
                     intent = new Intent(Dashboard.this, AddPost.class);
                 } else {
-                    intent = new Intent(Dashboard.this, Login.class);
+                    intent = new Intent(Dashboard.this, AddPost.class);
                 }
                 startActivity(intent);
             }

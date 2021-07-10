@@ -19,22 +19,25 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.adabters.ClientPostsAdapter;
+import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.ui.User.Auth.Login;
 import com.example.mandoby.ui.posts.AddPost;
 import com.example.mandoby.ui.posts.ClientPosts;
 import com.example.mandoby.ui.posts.MandopPosts;
 import com.example.mandoby.viewModels.ClientPostViewModel;
+import com.example.mandoby.viewModels.MandopPostViewModel;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static boolean isLoggedIn = false;
 
     //Hooks
     ImageView AddPost;
@@ -46,6 +49,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     RecyclerView clientsRecyclerView;
     RecyclerView mandopRecyclerView;
     ClientPostViewModel postViewModel;
+    MandopPostViewModel mandopPostViewModel;
 
 
     @Override
@@ -68,15 +72,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
-        mandopRecyclerView = findViewById(R.id.dashboard_clients_recyclerview);
+        mandopRecyclerView = findViewById(R.id.dashboard_mandop_recyclerview);
+        mandopPostViewModel = ViewModelProviders.of(this).get(MandopPostViewModel.class);
+        mandopPostViewModel.getPosts();
+        MandopPostsAdapter mandopAdapter= new MandopPostsAdapter();
         mandopRecyclerView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.HORIZONTAL , false));
-        mandopRecyclerView.setAdapter(myAdapter);
-        postViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
+        mandopRecyclerView.setAdapter(mandopAdapter);
+        mandopPostViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> post) {
-                myAdapter.setPostsList( post);
+                mandopAdapter.setPostsList( post);
             }
         });
+
 
         //declaration
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -96,10 +104,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         AddPost = (ImageView) findViewById(R.id.add_post);
         AddPost.setClickable(true);
 
-        Sessions sessions = new Sessions(Dashboard.this);
 
+        Sessions sessions = new Sessions(Dashboard.this);
         AddPost.setOnClickListener(new View.OnClickListener() {
             Intent intent;
+
 
             @Override
             public void onClick(View v) {
@@ -136,6 +145,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
 
         });
+        
     }
 
 
@@ -171,10 +181,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(intent4);
                 break;
 
+            case (R.id.logout):
+                Sessions sessions = new Sessions(Dashboard.this);
+                sessions.logoutUserFromSession();
+                Toast.makeText(this, "You Logged out", Toast.LENGTH_SHORT).show();
+                break;
+
         }
 
         return true;
     }
+
+
+
 
 
 }

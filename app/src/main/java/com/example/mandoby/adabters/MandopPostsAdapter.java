@@ -1,5 +1,7 @@
 package com.example.mandoby.adabters;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +10,19 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Post;
+import com.example.mandoby.ui.posts.MandopPosts;
+
 import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,13 +53,8 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
         holder.date.setText(postsList.get(position).getDate());
         holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
 
-        if(postsList.get(position).getImageurl()!= null &&Uri.parse(postsList.get(position).getImageurl())!= null)
-            holder.productImage.setImageURI(Uri.parse(postsList.get(position).getImageurl()));
-
-
-
+        Glide.with(holder.itemView).load(postsList.get(position).getImageurl()).into(holder.productImage);
     }
-
     @Override
     public int getItemCount() {
         return postsList.size();

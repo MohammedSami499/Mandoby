@@ -9,9 +9,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Post;
 import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +45,8 @@ public class ClientPostsAdapter extends RecyclerView.Adapter<ClientPostsAdapter.
             holder.name.setText(postsList.get(position).getName());
             holder.date.setText(postsList.get(position).getDate());
             holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
-
-        if(postsList.get(position).getImageurl()!= null &&Uri.parse(postsList.get(position).getImageurl())!= null)
-            holder.productImage.setImageURI(Uri.parse(postsList.get(position).getImageurl()));
+        //URL url = new URL(postsList.get(position).getImageurl());
+       Glide.with(holder.itemView).load(postsList.get(position).getImageurl()).into(holder.productImage);
 
 
 

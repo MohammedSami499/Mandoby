@@ -230,4 +230,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         return true;
     }
 
+    @Override
+    protected void onRestart() {
+        menu = navigationView.getMenu();
+        Sessions sessions = new Sessions(Dashboard.this);
+        if (sessions.checkLogin()){
+            menu.findItem(R.id.login).setVisible(false);
+            menu.findItem(R.id.profile).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }else{
+            menu.findItem(R.id.profile).setVisible(false);
+            menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.login).setVisible(true);
+        }
+        super.onRestart();
+    }
 }

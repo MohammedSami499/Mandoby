@@ -1,6 +1,5 @@
 package com.example.mandoby.adabters;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Post;
 import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ClientPostsAdapter extends RecyclerView.Adapter<ClientPostsAdapter.PostViewHolder>{
@@ -32,7 +30,9 @@ public class ClientPostsAdapter extends RecyclerView.Adapter<ClientPostsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ClientPostsAdapter.PostViewHolder holder, int position) {
-
+        Sessions sessionsUser = new Sessions(holder.itemView.getContext());
+        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
+        String userName = userDataFromSession.get(Sessions.UserName);
 
             holder.post.setText("hi , i need a specific amount of "
                     +postsList.get(position).getProductName()
@@ -42,7 +42,7 @@ public class ClientPostsAdapter extends RecyclerView.Adapter<ClientPostsAdapter.
                     +postsList.get(position).getArea());
 
             holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
-            holder.name.setText(postsList.get(position).getName());
+        holder.name.setText(userName);
             holder.date.setText(postsList.get(position).getDate());
             holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
         //URL url = new URL(postsList.get(position).getImageurl());

@@ -3,7 +3,7 @@
     package="com.example.mandoby">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -13,17 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mandoby"
-        android:usesCleartextTraffic="true"
-        >
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.profile"></activity>
         <activity android:name=".ui.posts.ClientPosts" />
         <activity android:name=".ui.posts.MandopPosts" />
         <activity android:name=".ui.posts.AddPost" />
         <activity android:name=".ui.User.Auth.RegisterScreen" />
         <activity android:name=".ui.User.Auth.Login" />
         <activity android:name=".ui.Dashboard" />
-        <activity android:name=".ui.User.Auth.ConfirmLoginOtp"/>
+        <activity android:name=".ui.User.Auth.ConfirmLoginOtp" />
         <activity android:name=".ui.MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

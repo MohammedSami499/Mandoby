@@ -11,7 +11,11 @@ public class Sessions {
     SharedPreferences.Editor editor;
     Context context;
 
+<<<<<<< HEAD
     public static final String isLoggedIn = "IsLoggedIn";
+=======
+    private static final String isLoggedIn = "IsLoggedIn";
+>>>>>>> 5f0e975dcdca6227fee90c8acdac2d2a72344929
     public static final String UserName = "UserName";
     public static final String PhoneNumber = "PhoneNumber";
 

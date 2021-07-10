@@ -133,7 +133,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
                 userType="user";
             }
 
-            post = new UploadedPost(122,amount,"01033450442","zaki",productType,productName,selectedItemSpinner
+            post = new UploadedPost(122,amount,"01033450442","Tarek",productType,productName,selectedItemSpinner
             ,imageUrl,government,userType,area,"");
 
              retrofit = new Retrofit.Builder()
@@ -233,14 +233,6 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
 
             }
         });
-    }
-
-    private String getFileExtension(Uri muri) {
-
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(muri));
-
     }
 
 

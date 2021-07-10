@@ -34,4 +34,8 @@ public class PostsClient {
         return postInterface.getUsersPosts();
     }
 
+    public Call<List<Post>> getPosts(String phone) {
+        return postInterface.getPosts(phone);
+    }
+
 }

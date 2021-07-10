@@ -27,6 +27,7 @@ import com.example.mandoby.adabters.ClientPostsAdapter;
 import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.ui.User.Auth.Login;
+import com.example.mandoby.ui.User.Auth.RegisterScreen;
 import com.example.mandoby.ui.posts.AddPost;
 import com.example.mandoby.ui.posts.ClientPosts;
 import com.example.mandoby.ui.posts.MandopPosts;
@@ -115,7 +116,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 if (sessions.checkLogin()) {
                     intent = new Intent(Dashboard.this, AddPost.class);
                 } else {
-                    intent = new Intent(Dashboard.this, Login.class);
+                    intent = new Intent(Dashboard.this, AddPost.class);
                 }
                 startActivity(intent);
             }
@@ -165,7 +166,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         switch (item.getItemId()) {
             case R.id.profile:
-                Intent intent = new Intent(this, Dashboard.class);
+                Intent intent = new Intent(this, profile.class);
                 startActivity(intent);
                 break;
             case (R.id.add_post):
@@ -180,6 +181,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 Intent intent4 = new Intent(this, ClientPosts.class);
                 startActivity(intent4);
                 break;
+            case (R.id.login):
+            Intent intent5 = new Intent(this, RegisterScreen.class);
+            startActivity(intent5);
+            break;
 
             case (R.id.logout):
                 Sessions sessions = new Sessions(Dashboard.this);

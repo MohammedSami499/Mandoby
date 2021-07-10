@@ -155,7 +155,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         switch (item.getItemId()) {
             case R.id.profile:
-                Intent intent = new Intent(this, Dashboard.class);
+                Intent intent = new Intent(this, profile.class);
                 startActivity(intent);
                 break;
             case (R.id.add_post):

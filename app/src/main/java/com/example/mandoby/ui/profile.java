@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.adabters.PostAdapter;
 import com.example.mandoby.model.Model;
@@ -35,6 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,11 +58,15 @@ public class profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        Sessions sessionsUser = new Sessions(profile.this);
+        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
+        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
+
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userName = findViewById(R.id.tv_name);
         img_profile = findViewById(R.id.img_profile_user);
 
-        userViewModel.getUser("01018148645");
+        userViewModel.getUser(phoneNum);
 
         userViewModel.userMutableLiveData.observe(this, new Observer<UserInfo>() {
             @Override
@@ -70,7 +76,7 @@ public class profile extends AppCompatActivity {
             }
         });
 
-        userViewModel.getPosts("01204467121");
+        userViewModel.getPosts(phoneNum);
 
         recyclerView = findViewById(R.id.recycler);
         PostAdapter adapter = new PostAdapter();

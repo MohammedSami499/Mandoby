@@ -139,9 +139,9 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
             Sessions sessionsUser = new Sessions(AddPost.this);
             HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
             String userName = userDataFromSession.get(Sessions.UserName);
+            String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
 
-
-            post = new UploadedPost(122,amount,"01033450442",userName,productType,productName,selectedItemSpinner
+            post = new UploadedPost(122,amount,phoneNum,userName,productType,productName,selectedItemSpinner
             ,imageUrl,government,userType,area,"");
 
              retrofit = new Retrofit.Builder()

@@ -12,6 +12,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface PostInterface {
@@ -28,7 +29,8 @@ public interface PostInterface {
     @GET("getPostsWithPhone/{phone}")
     public Call<List<Post>> getPosts(@Path("phone") String phone);
 
-
+    @PUT("updateUser")
+    public Call<UserInfo> storeImage(@Body UserInfo userInfo);
 
     @POST("add")
     public Call <Void> uploadClientPost(@Body UploadedPost post);

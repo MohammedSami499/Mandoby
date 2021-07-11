@@ -7,6 +7,7 @@ import com.example.mandoby.Network.PostsClient;
 import com.example.mandoby.Network.UserClients;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.model.UserInfo;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.List;
 
@@ -42,6 +43,20 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void storeImage(UserInfo userInfo) {
+        UserClients.getInstance().storeImage(userInfo).enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                userMutableLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
 
             }
         });

@@ -3,6 +3,7 @@ package com.example.mandoby.adabters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         TextView date;
         TextView productType;
         TextView units;
+        ImageView img_profile;
         public PostHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.tv_user_name);

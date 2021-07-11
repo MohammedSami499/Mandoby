@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mandoby"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.profile"></activity>
+        <activity android:name=".ui.ContactRequest"></activity>
+        <activity android:name=".ui.profile" />
         <activity android:name=".ui.posts.ClientPosts" />
         <activity android:name=".ui.posts.MandopPosts" />
         <activity android:name=".ui.posts.AddPost" />

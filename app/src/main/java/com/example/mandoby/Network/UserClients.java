@@ -29,4 +29,6 @@ public class UserClients {
     public Call<UserInfo> getUser(String phone) {
         return postInterface.getUser(phone);
     }
+
+    public Call<UserInfo> storeImage(UserInfo userInfo) { return postInterface.storeImage(userInfo); }
 }

@@ -7,6 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserClients {
+
     private static final String BASE_URL = "https://gp-mandoob-users.herokuapp.com/";
     private PostInterface postInterface;
     private static UserClients Instance;

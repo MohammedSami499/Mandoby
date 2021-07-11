@@ -14,27 +14,32 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.adabters.ClientPostsAdapter;
+import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.ui.User.Auth.Login;
+import com.example.mandoby.ui.User.Auth.RegisterScreen;
 import com.example.mandoby.ui.posts.AddPost;
 import com.example.mandoby.ui.posts.ClientPosts;
 import com.example.mandoby.ui.posts.MandopPosts;
 import com.example.mandoby.viewModels.ClientPostViewModel;
+import com.example.mandoby.viewModels.MandopPostViewModel;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static boolean isLoggedIn = false;
 
     //Hooks
     ImageView AddPost;
@@ -46,8 +51,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     RecyclerView clientsRecyclerView;
     RecyclerView mandopRecyclerView;
     ClientPostViewModel postViewModel;
+    MandopPostViewModel mandopPostViewModel;
 
 
+    Menu menu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,15 +75,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
-        mandopRecyclerView = findViewById(R.id.dashboard_clients_recyclerview);
+        mandopRecyclerView = findViewById(R.id.dashboard_mandop_recyclerview);
+        mandopPostViewModel = ViewModelProviders.of(this).get(MandopPostViewModel.class);
+        mandopPostViewModel.getPosts();
+        MandopPostsAdapter mandopAdapter= new MandopPostsAdapter();
         mandopRecyclerView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.HORIZONTAL , false));
-        mandopRecyclerView.setAdapter(myAdapter);
-        postViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
+        mandopRecyclerView.setAdapter(mandopAdapter);
+        mandopPostViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> post) {
-                myAdapter.setPostsList( post);
+                mandopAdapter.setPostsList( post);
             }
         });
+
 
         //declaration
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -90,16 +101,20 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawerLayout.addDrawerListener(toggle);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.home_nav);
 
+        //user session
+        Sessions sessions = new Sessions(Dashboard.this);
 
         // the adding post details
         AddPost = (ImageView) findViewById(R.id.add_post);
         AddPost.setClickable(true);
 
-        Sessions sessions = new Sessions(Dashboard.this);
+
 
         AddPost.setOnClickListener(new View.OnClickListener() {
             Intent intent;
+
 
             @Override
             public void onClick(View v) {
@@ -136,6 +151,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
 
         });
+
+        //hiding and showing items
+        menu = navigationView.getMenu();
+        if (sessions.checkLogin()){
+            menu.findItem(R.id.login).setVisible(false);
+            menu.findItem(R.id.profile).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }else{
+            menu.findItem(R.id.profile).setVisible(false);
+            menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.login).setVisible(true);
+        }
+        
     }
 
 
@@ -150,18 +178,31 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         }
     }
 
+    // navigating throw navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
 
+
+        Sessions sessions = new Sessions(Dashboard.this);
+        boolean isLoggedIn = sessions.checkLogin();
+
         switch (item.getItemId()) {
             case R.id.profile:
-                Intent intent = new Intent(this, profile.class);
-                startActivity(intent);
-                break;
+                    Intent intent = new Intent(this, profile.class);
+                    startActivity(intent);
+                    break;
+
             case (R.id.add_post):
-                Intent intent2 = new Intent(this, AddPost.class);
-                startActivity(intent2);
-                break;
+                if (isLoggedIn){
+                    Intent intent2 = new Intent(this, AddPost.class);
+                    startActivity(intent2);
+                    break;
+                }else{
+                    Intent intent2 = new Intent(this, Login.class);
+                    startActivity(intent2);
+                    break;
+                }
+
             case (R.id.represents):
                 Intent intent3 = new Intent(this, MandopPosts.class);
                 startActivity(intent3);
@@ -170,11 +211,38 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 Intent intent4 = new Intent(this, ClientPosts.class);
                 startActivity(intent4);
                 break;
+            case (R.id.login):
+            Intent intent5 = new Intent(this, Login .class);
+            startActivity(intent5);
+            break;
 
+            case (R.id.logout):
+                sessions.logoutUserFromSession();
+                Toast.makeText(this, "You Logged out", Toast.LENGTH_SHORT).show();
+                menu.findItem(R.id.profile).setVisible(false);
+                menu.findItem(R.id.logout).setVisible(false);
+                menu.findItem(R.id.login).setVisible(true);
+                break;
+            case (R.id.home_nav):
+                break;
         }
-
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
-
+    @Override
+    protected void onRestart() {
+        menu = navigationView.getMenu();
+        Sessions sessions = new Sessions(Dashboard.this);
+        if (sessions.checkLogin()){
+            menu.findItem(R.id.login).setVisible(false);
+            menu.findItem(R.id.profile).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }else{
+            menu.findItem(R.id.profile).setVisible(false);
+            menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.login).setVisible(true);
+        }
+        super.onRestart();
+    }
 }

@@ -2,46 +2,55 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/home"
-            android:title="Home"
-            android:icon="@drawable/nav_home"/>
+            android:id="@+id/home_nav"
+            android:icon="@drawable/nav_home"
+            android:title="Home" />
         <item
-            android:id="@+id/add_post"
-            android:title="Add Post"
-            android:icon="@drawable/add_post"
-            />
-        <item
-            android:id="@+id/represents"
-            android:title="Mandop Posts"
-            android:icon="@drawable/representative"/>
-        <item
-            android:id="@+id/clients"
-            android:title="Clients Posts"
-            android:icon="@drawable/client_posts"/>
+            android:id="@+id/profile"
+            android:icon="@drawable/profile"
+            android:title="Profile" />
+
+
     </group>
 
-    <item android:title="Profile">
+    <item android:title="Posts">
 
         <menu>
             <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/add_post"
+                    android:icon="@drawable/add_post"
+                    android:title="Add Post" />
 
                 <item
-                    android:id="@+id/profile"
-                    android:title="Profile"
-                    android:icon="@drawable/profile"/>
+                    android:id="@+id/represents"
+                    android:icon="@drawable/representative"
+                    android:title="Mandop Posts" />
                 <item
-                    android:id="@+id/logout"
-                    android:title="Logout"
-                    android:icon="@drawable/log_out"
-                    />
-                <item
-                    android:id="@+id/login"
-                    android:title="Login"
-                    android:icon="@drawable/log_in"/>
+                    android:id="@+id/clients"
+                    android:icon="@drawable/client_posts"
+                    android:title="Clients Posts" />
+
             </group>
 
         </menu>
 
+    </item>
+
+    <item android:title="Logging">
+
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/logout"
+                    android:icon="@drawable/log_out"
+                    android:title="Logout" />
+                <item
+                    android:id="@+id/login"
+                    android:icon="@drawable/log_in"
+                    android:title="Login" />
+            </group>
+        </menu>
     </item>
 
 </menu>

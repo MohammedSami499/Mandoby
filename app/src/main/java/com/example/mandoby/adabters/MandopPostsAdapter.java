@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.ui.posts.MandopPosts;
@@ -24,9 +25,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.PostViewHolder>{
+
 
     private List<Post> postsList = new ArrayList<>();
     @NonNull
@@ -41,7 +44,9 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
     public void onBindViewHolder(@NonNull @NotNull MandopPostsAdapter.PostViewHolder holder, int position) {
 
 
-        holder.post.setText("hi , i need a specific amount of "
+
+
+        holder.post.setText("hi , i have a specific amount of "
                 +postsList.get(position).getProductName()
                 +" i'am in "
                 +postsList.get(position).getGovernment()
@@ -52,7 +57,6 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
         holder.name.setText(postsList.get(position).getName());
         holder.date.setText(postsList.get(position).getDate());
         holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
-
         Glide.with(holder.itemView).load(postsList.get(position).getImageurl()).into(holder.productImage);
     }
     @Override
@@ -68,7 +72,7 @@ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
         ImageView productImage;
-        TextView post,quantity ,name,date;
+        TextView post,quantity ,name,date ;
         Spinner unit;
 
         public PostViewHolder(@NonNull @NotNull View itemView) {

@@ -14,15 +14,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.adabters.ClientPostsAdapter;
+import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.ui.User.Auth.Login;
 import com.example.mandoby.ui.User.Auth.RegisterScreen;
@@ -30,6 +33,7 @@ import com.example.mandoby.ui.posts.AddPost;
 import com.example.mandoby.ui.posts.ClientPosts;
 import com.example.mandoby.ui.posts.MandopPosts;
 import com.example.mandoby.viewModels.ClientPostViewModel;
+import com.example.mandoby.viewModels.MandopPostViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
@@ -47,6 +51,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     RecyclerView clientsRecyclerView;
     RecyclerView mandopRecyclerView;
     ClientPostViewModel postViewModel;
+    MandopPostViewModel mandopPostViewModel;
 
 
     @Override
@@ -69,13 +74,16 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
-        mandopRecyclerView = findViewById(R.id.dashboard_clients_recyclerview);
+        mandopPostViewModel = ViewModelProviders.of(this).get(MandopPostViewModel.class);
+        mandopPostViewModel.getPosts();
+        MandopPostsAdapter myMandopAdapter= new MandopPostsAdapter();
+        mandopRecyclerView = findViewById(R.id.dashboard_mandop_recyclerview);
         mandopRecyclerView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.HORIZONTAL , false));
         mandopRecyclerView.setAdapter(myAdapter);
-        postViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
+        mandopPostViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> post) {
-                myAdapter.setPostsList( post);
+                myMandopAdapter.setPostsList( post);
             }
         });
 
@@ -91,7 +99,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawerLayout.addDrawerListener(toggle);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setCheckedItem(R.id.home_nav);
 
         // the adding post details
         AddPost = (ImageView) findViewById(R.id.add_post);
@@ -137,9 +145,35 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
 
         });
+
+        Menu menu = navigationView.getMenu();
+        if (sessions.checkLogin()){
+            menu.findItem(R.id.login).setVisible(false);
+            menu.findItem(R.id.profile).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }else{
+            menu.findItem(R.id.login).setVisible(true);
+            menu.findItem(R.id.profile).setVisible(false);
+            menu.findItem(R.id.logout).setVisible(false);
+        }
     }
 
+    @Override
+    protected void onRestart() {
+        Sessions sessions = new Sessions(Dashboard.this);
+        Menu menu = navigationView.getMenu();
 
+        if (sessions.checkLogin()){
+            menu.findItem(R.id.login).setVisible(false);
+            menu.findItem(R.id.profile).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }else{
+            menu.findItem(R.id.login).setVisible(true);
+            menu.findItem(R.id.profile).setVisible(false);
+            menu.findItem(R.id.logout).setVisible(false);
+        }
+        super.onRestart();
+    }
 
     //Check if the drawable is open if true don't clos the app instead close the drawable
     @Override
@@ -176,6 +210,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             startActivity(intent5);
             break;
 
+            case (R.id.logout):
+                Sessions sessions = new Sessions(Dashboard.this);
+                sessions.logoutUserFromSession();
+                Toast.makeText(this, "You have logged out!!", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         return true;

@@ -152,6 +152,7 @@ public class Login extends AppCompatActivity {
                             intent.putExtra("Waled_otp", WaledOTP);
                             intent.putExtra("origin_otp", sentOTP);
                             startActivity(intent);
+                            finish();
                         }else{
                             Toast.makeText(Login.this, "the name is " + name, Toast.LENGTH_SHORT).show();
 
@@ -162,6 +163,7 @@ public class Login extends AppCompatActivity {
                             intent.putExtra("Waled_otp", WaledOTP);
                             intent.putExtra("origin_otp", sentOTP);
                             startActivity(intent);
+                            finish();
                         }
 
 

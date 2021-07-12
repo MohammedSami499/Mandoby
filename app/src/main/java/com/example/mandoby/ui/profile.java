@@ -13,15 +13,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
-import com.example.mandoby.adabters.PostAdapter;
-import com.example.mandoby.model.Model;
+import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
 import com.example.mandoby.model.UserInfo;
 import com.example.mandoby.viewModels.UserViewModel;
@@ -35,12 +34,10 @@ import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class profile extends AppCompatActivity {
+public class profile extends AppCompatActivity  {
 
     UserViewModel userViewModel;
     TextView userName;
@@ -52,41 +49,46 @@ public class profile extends AppCompatActivity {
     private StorageReference storageReference;
     UserInfo user;
     String imageUrl;
+    String image;
+    ImageView img_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        Sessions sessionsUser = new Sessions(profile.this);
-        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
-        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
+//
+//        Sessions sessionsUser = new Sessions(profile.this);
+//        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
+//        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userName = findViewById(R.id.tv_name);
         img_profile = findViewById(R.id.img_profile_user);
 
-        userViewModel.getUser(phoneNum);
+        userViewModel.getUser("01277740873");
 
         userViewModel.userMutableLiveData.observe(this, new Observer<UserInfo>() {
             @Override
             public void onChanged(UserInfo userInfo) {
                 userName.setText(userInfo.getName());
+                image = userInfo.getImageUrl();
                 Glide.with(getApplicationContext()).load(userInfo.getImageUrl()).into(img_profile);
+
             }
         });
 
-        userViewModel.getPosts(phoneNum);
+        userViewModel.getPosts("01277740873");
+        img_user = findViewById(R.id.img_user);
 
         recyclerView = findViewById(R.id.recycler);
-        PostAdapter adapter = new PostAdapter();
+        MandopPostsAdapter adapter = new MandopPostsAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
         userViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
-                adapter.setList(posts);
+                adapter.setPostsList(posts);
             }
         });
 
@@ -148,7 +150,7 @@ public class profile extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
 //                                Model model = new Model(uri.toString());
                                 imageUrl = uri.toString();
-                                user = new UserInfo(userName.getText().toString() , imageUrl , "01018148645");
+                                user = new UserInfo(userName.getText().toString() , imageUrl , "01277740873");
                                 userViewModel.storeImage(user);
                                 System.out.println(imageUrl + "url");
                             }
@@ -172,4 +174,5 @@ public class profile extends AppCompatActivity {
                     }
                 });
     }
+
 }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Post;
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     List<Post> posts = new ArrayList<>();
+    String imageUri;
+    ImageView img_profile;
 
     @NonNull
     @Override
@@ -39,6 +42,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     }
 
     public void setList(List<Post> posts) {
+
         this.posts = posts;
         notifyDataSetChanged();
     }
@@ -49,7 +53,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         TextView date;
         TextView productType;
         TextView units;
-        ImageView img_profile;
+
+
         public PostHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.tv_user_name);

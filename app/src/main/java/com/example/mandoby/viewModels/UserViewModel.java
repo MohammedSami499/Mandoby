@@ -25,6 +25,7 @@ public class UserViewModel extends ViewModel {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 userMutableLiveData.setValue(response.body());
+                System.out.println(response.body().getImageUrl() + " heeeeeey");
             }
 
             @Override

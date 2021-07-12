@@ -1,0 +1,377 @@
+Index: app/src/main/java/com/example/mandoby/ui/profile.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mandoby.ui;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.lifecycle.Observer;\nimport androidx.lifecycle.ViewModelProviders;\nimport androidx.recyclerview.widget.LinearLayoutManager;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport android.app.ProgressDialog;\nimport android.content.Intent;\nimport android.net.Uri;\nimport android.os.Bundle;\nimport android.view.View;\nimport android.widget.ImageView;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport com.bumptech.glide.Glide;\nimport com.example.mandoby.Network.Sessions;\nimport com.example.mandoby.R;\nimport com.example.mandoby.adabters.PostAdapter;\nimport com.example.mandoby.model.Model;\nimport com.example.mandoby.model.Post;\nimport com.example.mandoby.model.UserInfo;\nimport com.example.mandoby.viewModels.UserViewModel;\nimport com.google.android.gms.tasks.OnFailureListener;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.material.snackbar.Snackbar;\nimport com.google.firebase.storage.FirebaseStorage;\nimport com.google.firebase.storage.OnProgressListener;\nimport com.google.firebase.storage.StorageReference;\nimport com.google.firebase.storage.UploadTask;\n\nimport org.jetbrains.annotations.NotNull;\n\nimport java.io.File;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.UUID;\n\npublic class profile extends AppCompatActivity {\n\n    UserViewModel userViewModel;\n    TextView userName;\n    RecyclerView recyclerView;\n    ImageView img_back;\n    ImageView img_profile;\n    public Uri imageUri;\n    private FirebaseStorage storage;\n    private StorageReference storageReference;\n    UserInfo user;\n    String imageUrl;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_profile);\n\n        Sessions sessionsUser = new Sessions(profile.this);\n        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();\n        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);\n\n        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);\n        userName = findViewById(R.id.tv_name);\n        img_profile = findViewById(R.id.img_profile_user);\n\n        userViewModel.getUser(phoneNum);\n\n        userViewModel.userMutableLiveData.observe(this, new Observer<UserInfo>() {\n            @Override\n            public void onChanged(UserInfo userInfo) {\n                userName.setText(userInfo.getName());\n                Glide.with(getApplicationContext()).load(userInfo.getImageUrl()).into(img_profile);\n            }\n        });\n\n        userViewModel.getPosts(phoneNum);\n\n        recyclerView = findViewById(R.id.recycler);\n        PostAdapter adapter = new PostAdapter();\n        recyclerView.setLayoutManager(new LinearLayoutManager(this));\n        recyclerView.setAdapter(adapter);\n\n        userViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {\n            @Override\n            public void onChanged(List<Post> posts) {\n                adapter.setList(posts);\n            }\n        });\n\n        img_back = findViewById(R.id.img_profile_back);\n        img_back.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                Intent intent = new Intent(profile.this , Dashboard.class);\n                startActivity(intent);\n            }\n        });\n\n\n        img_profile = findViewById(R.id.img_profile_user);\n\n        storage = FirebaseStorage.getInstance();\n        storageReference = storage.getReference();\n\n        img_profile.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                choosePicture();\n            }\n        });\n\n    }\n    private void choosePicture() {\n        Intent intent = new Intent();\n        intent.setType(\"image/*\");\n        intent.setAction(Intent.ACTION_GET_CONTENT);\n        startActivityForResult(intent , 1);\n    }\n\n    @Override\n    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {\n        super.onActivityResult(requestCode, resultCode, data);\n        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {\n            imageUri = data.getData();\n            img_profile.setImageURI(imageUri);\n            uploadPicture();\n        }\n    }\n\n    private void uploadPicture() {\n\n        final ProgressDialog pd = new ProgressDialog(this);\n        pd.setTitle(\"Uploading Image...\");\n        pd.show();\n\n        final String randomKey = UUID.randomUUID().toString();\n        StorageReference riversRef = storageReference.child(\"images/\" + randomKey);\n\n        riversRef.putFile(imageUri)\n                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {\n                    @Override\n                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {\n                        riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {\n                            @Override\n                            public void onSuccess(Uri uri) {\n//                                Model model = new Model(uri.toString());\n                                imageUrl = uri.toString();\n                                user = new UserInfo(userName.getText().toString() , imageUrl , \"01018148645\");\n                                userViewModel.storeImage(user);\n                                System.out.println(imageUrl + \"url\");\n                            }\n                        });\n                        pd.dismiss();\n                        Snackbar.make(findViewById(android.R.id.content) , \"image uploaded.\" , Snackbar.LENGTH_LONG).show();\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception exception) {\n                        pd.dismiss();\n                        Toast.makeText(getApplicationContext() , \"Failed to upload\" , Toast.LENGTH_LONG).show();\n                    }\n                })\n                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {\n                    @Override\n                    public void onProgress(@NonNull @NotNull UploadTask.TaskSnapshot taskSnapshot) {\n                        double progressPercent = (100.0 + taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());\n                        pd.setMessage(\"Percentage: \" + (int) progressPercent + \"%\");\n                    }\n                });\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/mandoby/ui/profile.java	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/java/com/example/mandoby/ui/profile.java	(date 1626080963486)
+@@ -13,15 +13,14 @@
+ import android.net.Uri;
+ import android.os.Bundle;
+ import android.view.View;
++import android.widget.Button;
+ import android.widget.ImageView;
+ import android.widget.TextView;
+ import android.widget.Toast;
+ 
+ import com.bumptech.glide.Glide;
+-import com.example.mandoby.Network.Sessions;
+ import com.example.mandoby.R;
+-import com.example.mandoby.adabters.PostAdapter;
+-import com.example.mandoby.model.Model;
++import com.example.mandoby.adabters.MandopPostsAdapter;
+ import com.example.mandoby.model.Post;
+ import com.example.mandoby.model.UserInfo;
+ import com.example.mandoby.viewModels.UserViewModel;
+@@ -35,12 +34,10 @@
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+-import java.io.File;
+-import java.util.HashMap;
+ import java.util.List;
+ import java.util.UUID;
+ 
+-public class profile extends AppCompatActivity {
++public class profile extends AppCompatActivity  {
+ 
+     UserViewModel userViewModel;
+     TextView userName;
+@@ -52,41 +49,46 @@
+     private StorageReference storageReference;
+     UserInfo user;
+     String imageUrl;
++    String image;
++    ImageView img_user;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_profile);
+-
+-        Sessions sessionsUser = new Sessions(profile.this);
+-        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
+-        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
++//
++//        Sessions sessionsUser = new Sessions(profile.this);
++//        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
++//        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
+ 
+         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+         userName = findViewById(R.id.tv_name);
+         img_profile = findViewById(R.id.img_profile_user);
+ 
+-        userViewModel.getUser(phoneNum);
++        userViewModel.getUser("01277740873");
+ 
+         userViewModel.userMutableLiveData.observe(this, new Observer<UserInfo>() {
+             @Override
+             public void onChanged(UserInfo userInfo) {
+                 userName.setText(userInfo.getName());
++                image = userInfo.getImageUrl();
+                 Glide.with(getApplicationContext()).load(userInfo.getImageUrl()).into(img_profile);
++
+             }
+         });
+ 
+-        userViewModel.getPosts(phoneNum);
++        userViewModel.getPosts("01277740873");
++        img_user = findViewById(R.id.img_user);
+ 
+         recyclerView = findViewById(R.id.recycler);
+-        PostAdapter adapter = new PostAdapter();
++        MandopPostsAdapter adapter = new MandopPostsAdapter();
+         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+         recyclerView.setAdapter(adapter);
+ 
+         userViewModel.postMutableLiveData.observe(this, new Observer<List<Post>>() {
+             @Override
+             public void onChanged(List<Post> posts) {
+-                adapter.setList(posts);
++                adapter.setPostsList(posts);
+             }
+         });
+ 
+@@ -148,7 +150,7 @@
+                             public void onSuccess(Uri uri) {
+ //                                Model model = new Model(uri.toString());
+                                 imageUrl = uri.toString();
+-                                user = new UserInfo(userName.getText().toString() , imageUrl , "01018148645");
++                                user = new UserInfo(userName.getText().toString() , imageUrl , "01277740873");
+                                 userViewModel.storeImage(user);
+                                 System.out.println(imageUrl + "url");
+                             }
+@@ -172,4 +174,5 @@
+                     }
+                 });
+     }
++
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/mandoby/adabters/MandopPostsAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mandoby.adabters;\n\nimport android.content.Context;\nimport android.graphics.drawable.Drawable;\nimport android.net.Uri;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.ImageView;\nimport android.widget.Spinner;\nimport android.widget.TextView;\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.bumptech.glide.Glide;\nimport com.bumptech.glide.request.RequestListener;\nimport com.bumptech.glide.request.target.Target;\nimport com.example.mandoby.Network.Sessions;\nimport com.example.mandoby.R;\nimport com.example.mandoby.model.Post;\nimport com.example.mandoby.ui.posts.MandopPosts;\n\nimport org.jetbrains.annotations.NotNull;\n\nimport java.net.URL;\nimport java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.List;\n\npublic class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.PostViewHolder>{\n\n\n    private List<Post> postsList = new ArrayList<>();\n    @NonNull\n    @NotNull\n    @Override\n    public PostViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {\n        return new MandopPostsAdapter.PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.client_posts_list,parent,false));\n\n    }\n\n    @Override\n    public void onBindViewHolder(@NonNull @NotNull MandopPostsAdapter.PostViewHolder holder, int position) {\n\n\n\n\n        holder.post.setText(\"hi , i have a specific amount of \"\n                +postsList.get(position).getProductName()\n                +\" i'am in \"\n                +postsList.get(position).getGovernment()\n                + \" government in \"\n                +postsList.get(position).getArea());\n\n        holder.quantity.setText(\"\"+postsList.get(position).getAmount() + \" \"+postsList.get(position).getUnit());\n        holder.name.setText(postsList.get(position).getName());\n        holder.date.setText(postsList.get(position).getDate());\n        holder.quantity.setText(\"\"+postsList.get(position).getAmount() + \" \"+postsList.get(position).getUnit());\n        Glide.with(holder.itemView).load(postsList.get(position).getImageurl()).into(holder.productImage);\n    }\n    @Override\n    public int getItemCount() {\n        return postsList.size();\n    }\n\n    public void setPostsList (List<Post> postsList){\n        this.postsList = postsList;\n        notifyDataSetChanged();\n    }\n\n    public class PostViewHolder extends RecyclerView.ViewHolder {\n\n        ImageView productImage;\n        TextView post,quantity ,name,date ;\n        Spinner unit;\n\n        public PostViewHolder(@NonNull @NotNull View itemView) {\n            super(itemView);\n            productImage = itemView.findViewById(R.id.img_product_picture);\n            name = itemView.findViewById(R.id.client_posts_name);\n            post = itemView.findViewById(R.id.client_post_body);\n            quantity=itemView.findViewById(R.id.client_posts_quantity);\n            date=itemView.findViewById(R.id.client_posts_date);\n            unit=itemView.findViewById(R.id.spinner_type);\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/mandoby/adabters/MandopPostsAdapter.java	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/java/com/example/mandoby/adabters/MandopPostsAdapter.java	(date 1626080927246)
+@@ -1,37 +1,29 @@
+ package com.example.mandoby.adabters;
+ 
+-import android.content.Context;
+-import android.graphics.drawable.Drawable;
+-import android.net.Uri;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.Button;
+ import android.widget.ImageView;
+ import android.widget.Spinner;
+ import android.widget.TextView;
+ import androidx.annotation.NonNull;
+-import androidx.annotation.Nullable;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
+ import com.bumptech.glide.Glide;
+-import com.bumptech.glide.request.RequestListener;
+-import com.bumptech.glide.request.target.Target;
+-import com.example.mandoby.Network.Sessions;
+ import com.example.mandoby.R;
+ import com.example.mandoby.model.Post;
+-import com.example.mandoby.ui.posts.MandopPosts;
+ 
+ import org.jetbrains.annotations.NotNull;
+ 
+-import java.net.URL;
+ import java.util.ArrayList;
+-import java.util.HashMap;
+ import java.util.List;
+ 
+ public class MandopPostsAdapter extends RecyclerView.Adapter<MandopPostsAdapter.PostViewHolder>{
+ 
+ 
+     private List<Post> postsList = new ArrayList<>();
++
+     @NonNull
+     @NotNull
+     @Override
+Index: app/src/main/res/layout/activity_contact_request.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:orientation=\"vertical\"\n    tools:context=\".ui.ContactRequest\">\n\n    <LinearLayout\n        android:orientation=\"horizontal\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"60dp\" >\n\n        <ImageView\n            android:id=\"@+id/img_user\"\n            android:src=\"@mipmap/ic_launcher\"\n            android:layout_gravity=\"center\"\n            android:layout_width=\"50dp\"\n            android:layout_height=\"50dp\" />\n\n        <LinearLayout\n            android:padding=\"8dp\"\n            android:orientation=\"vertical\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            >\n            <TextView\n                android:id=\"@+id/tv_user_name\"\n                android:text=\"name\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"20dp\" />\n\n            <TextView\n                android:id=\"@+id/tv_date\"\n                android:text=\"date\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"20dp\" />\n        </LinearLayout>\n\n    </LinearLayout>\n\n    <TextView\n        android:id=\"@+id/tv_product_type\"\n        android:layout_marginTop=\"8dp\"\n        android:layout_marginBottom=\"8dp\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"product type\"\n        android:textColor=\"@color/black\"\n        android:textSize=\"20sp\"\n        android:layout_marginHorizontal=\"5dp\" />\n\n    <ImageView\n        android:src=\"@mipmap/ic_launcher\"\n        android:id=\"@+id/img_producd\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\" />\n\n    <LinearLayout\n        android:layout_marginTop=\"8dp\"\n        android:padding=\"4dp\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"vertical\" >\n\n        <LinearLayout\n            android:padding=\"4dp\"\n            android:layout_weight=\"1\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:orientation=\"horizontal\"\n            android:gravity=\"center\"\n            android:layout_marginVertical=\"5dp\"\n            >\n\n            <TextView\n                android:id=\"@+id/amount\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_weight=\"2\"\n                android:elevation=\"5dp\"\n                android:gravity=\"center\"\n                android:text=\"amount\"\n                android:textColor=\"@color/black\"\n                android:textSize=\"20sp\"\n                android:layout_marginEnd=\"5dp\"\n                />\n            <TextView\n                android:id=\"@+id/add_post_text\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_weight=\"2\"\n                android:text=\"Contact Request\"\n                android:textColor=\"@color/black\"\n                android:textSize=\"20sp\"\n                android:gravity=\"center\"\n                android:elevation=\"5dp\"\n                />\n\n        </LinearLayout>\n\n    </LinearLayout>\n\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_contact_request.xml	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/res/layout/activity_contact_request.xml	(date 1626042106394)
+@@ -13,8 +13,8 @@
+         android:layout_height="60dp" >
+ 
+         <ImageView
+-            android:id="@+id/img_user"
+-            android:src="@mipmap/ic_launcher"
++            android:id="@+id/user"
++            android:src="@drawable/ic_launcher_background"
+             android:layout_gravity="center"
+             android:layout_width="50dp"
+             android:layout_height="50dp" />
+@@ -41,7 +41,7 @@
+     </LinearLayout>
+ 
+     <TextView
+-        android:id="@+id/tv_product_type"
++        android:id="@+id/product_type"
+         android:layout_marginTop="8dp"
+         android:layout_marginBottom="8dp"
+         android:layout_width="wrap_content"
+@@ -52,8 +52,8 @@
+         android:layout_marginHorizontal="5dp" />
+ 
+     <ImageView
+-        android:src="@mipmap/ic_launcher"
+-        android:id="@+id/img_producd"
++        android:src="@drawable/ic_launcher_background"
++        android:id="@+id/product"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+ 
+@@ -75,7 +75,7 @@
+             >
+ 
+             <TextView
+-                android:id="@+id/amount"
++                android:id="@+id/quantity"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="2"
+@@ -86,17 +86,7 @@
+                 android:textSize="20sp"
+                 android:layout_marginEnd="5dp"
+                 />
+-            <TextView
+-                android:id="@+id/add_post_text"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_weight="2"
+-                android:text="Contact Request"
+-                android:textColor="@color/black"
+-                android:textSize="20sp"
+-                android:gravity="center"
+-                android:elevation="5dp"
+-                />
++
+ 
+         </LinearLayout>
+ 
+Index: app/src/main/res/layout/client_posts_list.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.cardview.widget.CardView xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_marginVertical=\"10dp\"\n    android:backgroundTint=\"@color/lightWhite\"\n    android:layout_margin=\"8dp\"\n    app:cardCornerRadius=\"10dp\"\n    app:cardElevation=\"10dp\"\n    >\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"vertical\"\n        android:padding=\"7dp\"\n        >\n\n    <LinearLayout\n        android:layout_weight=\"1\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"horizontal\"\n        android:gravity=\"center\"\n        android:background=\"@color/banner_background\"\n\n        android:layout_marginVertical=\"5dp\"\n        >\n\n        <TextView\n            android:id=\"@+id/client_posts_name\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_marginEnd=\"10dp\"\n            android:layout_weight=\"2\"\n            android:elevation=\"5dp\"\n            android:textColor=\"@color/black\"\n            android:fontFamily=\"@font/baloo_bhai\"\n            android:gravity=\"start\"\n            android:text=\"Mohamed Tarek\"\n            android:textSize=\"20sp\"\n            android:paddingStart=\"10dp\"/>\n\n        <TextView\n            android:id=\"@+id/client_posts_date\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"2\"\n            android:elevation=\"5dp\"\n            android:gravity=\"start\"\n            android:paddingStart=\"10dp\"\n            android:text=\"15/7/2021\"\n            android:fontFamily=\"@font/baloo_bhai\"\n            android:textSize=\"15sp\"\n            android:layout_marginEnd=\"10dp\"\n            />\n    </LinearLayout>\n\n    <TextView\n        android:id=\"@+id/client_post_body\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"###################################################\"\n        android:textColor=\"@color/black\"\n        android:textSize=\"20sp\"\n        android:layout_gravity=\"start\"\n        android:gravity=\"start\"\n        android:layout_marginHorizontal=\"5dp\"\n        />\n\n    <ImageView\n        android:id=\"@+id/img_product_picture\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"160dp\"\n        android:adjustViewBounds=\"true\"\n        android:layout_gravity=\"center_vertical\"\n        android:layout_marginEnd=\"10dp\"\n        android:src=\"@drawable/add_post\"\n        android:layout_marginHorizontal=\"5dp\"\n\n        />\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"vertical\"\n        android:background=\"@color/banner_background\"\n\n        >\n\n        <LinearLayout\n            android:layout_weight=\"1\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:orientation=\"horizontal\"\n            android:gravity=\"center\"\n            android:layout_marginVertical=\"5dp\"\n            >\n\n            <TextView\n                android:id=\"@+id/client_posts_quantity\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_weight=\"2\"\n                android:elevation=\"5dp\"\n                android:paddingStart=\"10dp\"\n                android:text=\"120\"\n                android:fontFamily=\"@font/baloo_bhai\"\n                android:textColor=\"@color/black\"\n                android:textSize=\"20sp\"\n                android:layout_marginEnd=\"5dp\"\n                android:layout_gravity=\"start\"\n                />\n            <TextView\n                android:id=\"@+id/add_post_text\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_weight=\"2\"\n                android:text=\"Contact Request\"\n                android:textColor=\"@color/black\"\n                android:background=\"@color/colorPrimary\"\n                android:textSize=\"20sp\"\n                android:gravity=\"center\"\n                android:elevation=\"5dp\"\n                android:layout_marginEnd=\"5dp\"\n                />\n\n            </LinearLayout>\n\n         </LinearLayout>\n    </LinearLayout>\n</androidx.cardview.widget.CardView>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/client_posts_list.xml	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/res/layout/client_posts_list.xml	(date 1626042106450)
+@@ -108,10 +108,11 @@
+                 android:textColor="@color/black"
+                 android:textSize="20sp"
+                 android:layout_marginEnd="5dp"
+-                android:layout_gravity="start"
+-                />
+-            <TextView
+-                android:id="@+id/add_post_text"
++                android:layout_gravity="center"
++                android:gravity="center" />
++
++            <Button
++                android:id="@+id/contact"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="2"
+Index: app/src/main/java/com/example/mandoby/adabters/PostAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mandoby.adabters;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.ImageView;\nimport android.widget.TextView;\n\nimport androidx.annotation.NonNull;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.example.mandoby.R;\nimport com.example.mandoby.model.Post;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {\n\n    List<Post> posts = new ArrayList<>();\n\n    @NonNull\n    @Override\n    public PostHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\n        return new PostHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false));\n    }\n\n    @Override\n    public void onBindViewHolder(@NonNull PostHolder holder, int position) {\n        holder.userName.setText(posts.get(position).getName());\n        holder.date.setText(posts.get(position).getDate());\n        holder.productType.setText(posts.get(position).getProductType());\n        holder.units.setText(posts.get(position).getUnit());\n    }\n\n    @Override\n    public int getItemCount() {\n        return posts.size();\n    }\n\n    public void setList(List<Post> posts) {\n        this.posts = posts;\n        notifyDataSetChanged();\n    }\n\n\n    public class PostHolder extends RecyclerView.ViewHolder {\n        TextView userName;\n        TextView date;\n        TextView productType;\n        TextView units;\n        ImageView img_profile;\n        public PostHolder(@NonNull View itemView) {\n            super(itemView);\n            userName = itemView.findViewById(R.id.tv_user_name);\n            date = itemView.findViewById(R.id.tv_date);\n            productType = itemView.findViewById(R.id.tv_product_type);\n            units = itemView.findViewById(R.id.amount);\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/mandoby/adabters/PostAdapter.java	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/java/com/example/mandoby/adabters/PostAdapter.java	(date 1626038067178)
+@@ -9,6 +9,7 @@
+ import androidx.annotation.NonNull;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
++import com.bumptech.glide.Glide;
+ import com.example.mandoby.R;
+ import com.example.mandoby.model.Post;
+ 
+@@ -18,6 +19,8 @@
+ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
+ 
+     List<Post> posts = new ArrayList<>();
++    String imageUri;
++    ImageView img_profile;
+ 
+     @NonNull
+     @Override
+@@ -39,6 +42,7 @@
+     }
+ 
+     public void setList(List<Post> posts) {
++
+         this.posts = posts;
+         notifyDataSetChanged();
+     }
+@@ -49,7 +53,8 @@
+         TextView date;
+         TextView productType;
+         TextView units;
+-        ImageView img_profile;
++
++
+         public PostHolder(@NonNull View itemView) {
+             super(itemView);
+             userName = itemView.findViewById(R.id.tv_user_name);
+Index: app/src/main/java/com/example/mandoby/ui/ContactRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mandoby.ui;\n\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport android.os.Bundle;\n\nimport com.example.mandoby.R;\n\npublic class ContactRequest extends AppCompatActivity {\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_contact_request);\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/mandoby/ui/ContactRequest.java	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/java/com/example/mandoby/ui/ContactRequest.java	(date 1626042106314)
+@@ -1,16 +1,33 @@
+ package com.example.mandoby.ui;
+ 
+ import androidx.appcompat.app.AppCompatActivity;
++import androidx.lifecycle.ViewModelProviders;
+ 
+ import android.os.Bundle;
++import android.widget.ImageView;
++import android.widget.TextView;
+ 
+ import com.example.mandoby.R;
++import com.example.mandoby.viewModels.UserViewModel;
+ 
+ public class ContactRequest extends AppCompatActivity {
+ 
++    UserViewModel userViewModel;
++    ImageView img_profile , img_product;
++    TextView productType , phoneNum , quantity;
++
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_contact_request);
++
++        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
++        img_profile = findViewById(R.id.user);
++        img_product = findViewById(R.id.product);
++        productType = findViewById(R.id.product_type);
++        quantity = findViewById(R.id.quantity);
++
++
++
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_profile.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:orientation=\"vertical\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".ui.MainActivity\"\n    android:layout_margin=\"16dp\"\n    android:padding=\"8dp\">\n\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:layout_marginLeft=\"8dp\"\n        android:layout_marginTop=\"8dp\"\n        android:layout_marginRight=\"8dp\"\n        android:layout_marginBottom=\"4dp\"\n        android:orientation=\"horizontal\"\n        android:padding=\"8dp\">\n\n        <ImageView\n            android:id=\"@+id/img_profile_back\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_gravity=\"center\"\n            android:layout_marginRight=\"16dp\"\n            android:padding=\"8dp\"\n            android:src=\"@drawable/sign_up_back_btn\" />\n\n        <EditText\n            android:id=\"@+id/search\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:drawableRight=\"@drawable/dashboard_search_img\"\n            android:ems=\"10\"\n            android:inputType=\"textPersonName\" />\n\n    </LinearLayout>\n\n    <ImageView\n        android:id=\"@+id/img_profile_user\"\n        android:layout_width=\"100dp\"\n        android:layout_height=\"100dp\"\n        android:layout_marginStart=\"8dp\"\n        android:layout_marginTop=\"8dp\"\n        android:src=\"@mipmap/ic_launcher\" />\n\n    <TextView\n        android:id=\"@+id/tv_name\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_marginStart=\"8dp\"\n        android:layout_marginTop=\"8dp\" />\n\n\n\n    <LinearLayout\n        android:padding=\"8dp\"\n        android:layout_marginLeft=\"8dp\"\n        android:layout_marginTop=\"4dp\"\n        android:layout_marginRight=\"8dp\"\n        android:layout_marginBottom=\"4dp\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:orientation=\"horizontal\">\n\n        <TextView\n            android:id=\"@+id/tv_numOfOrder\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:text=\"10\"\n            android:gravity=\"center\"\n            />\n\n        <TextView\n            android:id=\"@+id/tv_order\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:gravity=\"center\"\n            android:text=\"orders\" />\n\n        <TextView\n            android:id=\"@+id/tv_numOfPosts\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:gravity=\"center\"\n            android:text=\"8\" />\n\n        <TextView\n            android:id=\"@+id/tv_posts\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_weight=\"1\"\n            android:text=\"posts\"\n            android:gravity=\"center\"\n            />\n    </LinearLayout>\n\n    <View\n        android:layout_width=\"match_parent\"\n        android:layout_marginTop=\"4dp\"\n        android:layout_marginBottom=\"4dp\"\n        android:layout_height=\"1dp\"\n        android:background=\"@android:color/darker_gray\"/>\n\n\n    <androidx.recyclerview.widget.RecyclerView\n        android:layout_marginLeft=\"8dp\"\n        android:layout_marginTop=\"4dp\"\n        android:layout_marginRight=\"8dp\"\n        android:id=\"@+id/recycler\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\">\n\n    </androidx.recyclerview.widget.RecyclerView>\n\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_profile.xml	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/res/layout/activity_profile.xml	(date 1626042106550)
+@@ -45,7 +45,7 @@
+         android:layout_height="100dp"
+         android:layout_marginStart="8dp"
+         android:layout_marginTop="8dp"
+-        android:src="@mipmap/ic_launcher" />
++        android:src="@drawable/ic_launcher_background" />
+ 
+     <TextView
+         android:id="@+id/tv_name"
+Index: app/src/main/java/com/example/mandoby/viewModels/UserViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mandoby.viewModels;\n\nimport androidx.lifecycle.MutableLiveData;\nimport androidx.lifecycle.ViewModel;\n\nimport com.example.mandoby.Network.PostsClient;\nimport com.example.mandoby.Network.UserClients;\nimport com.example.mandoby.model.Post;\nimport com.example.mandoby.model.UserInfo;\nimport com.google.firebase.firestore.auth.User;\n\nimport java.util.List;\n\nimport retrofit2.Call;\nimport retrofit2.Callback;\nimport retrofit2.Response;\n\npublic class UserViewModel extends ViewModel {\n    public MutableLiveData<UserInfo> userMutableLiveData = new MutableLiveData<>();\n    public MutableLiveData<List<Post>> postMutableLiveData = new MutableLiveData<>();\n\n    public void getUser(String phone) {\n        Call<UserInfo> call = UserClients.getInstance().getUser(phone);\n        call.enqueue(new Callback<UserInfo>() {\n            @Override\n            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {\n                userMutableLiveData.setValue(response.body());\n            }\n\n            @Override\n            public void onFailure(Call<UserInfo> call, Throwable t) {\n\n            }\n        });\n    }\n\n    public void getPosts(String phone) {\n        PostsClient.getInstance().getPosts(phone).enqueue(new Callback<List<Post>>() {\n            @Override\n            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {\n                postMutableLiveData.setValue(response.body());\n            }\n\n            @Override\n            public void onFailure(Call<List<Post>> call, Throwable t) {\n\n            }\n        });\n    }\n\n    public void storeImage(UserInfo userInfo) {\n        UserClients.getInstance().storeImage(userInfo).enqueue(new Callback<UserInfo>() {\n            @Override\n            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {\n                userMutableLiveData.setValue(response.body());\n            }\n\n            @Override\n            public void onFailure(Call<UserInfo> call, Throwable t) {\n\n            }\n        });\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/mandoby/viewModels/UserViewModel.java	(revision 0535051fd7803d2a0c32fc828f42e30bc9312bb0)
++++ app/src/main/java/com/example/mandoby/viewModels/UserViewModel.java	(date 1626017561709)
+@@ -25,6 +25,7 @@
+             @Override
+             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                 userMutableLiveData.setValue(response.body());
++                System.out.println(response.body().getImageUrl() + " heeeeeey");
+             }
+ 
+             @Override

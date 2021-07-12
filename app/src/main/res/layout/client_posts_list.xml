@@ -108,10 +108,11 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:layout_marginEnd="5dp"
-                android:layout_gravity="start"
-                />
-            <TextView
-                android:id="@+id/add_post_text"
+                android:layout_gravity="center"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"

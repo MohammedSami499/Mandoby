@@ -30,6 +30,7 @@ import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.model.Model;
 import com.example.mandoby.model.UploadedPost;
+import com.example.mandoby.ui.Dashboard;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -157,7 +158,7 @@ public class AddPost extends AppCompatActivity implements AdapterView.OnItemSele
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     Toast.makeText(getApplicationContext(),"Posted Successfully"   ,Toast.LENGTH_LONG ).show();
-                    System.out.println("Successfully");
+                    finish();
 
                 }
 

@@ -206,13 +206,17 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(intent4);
                 break;
             case (R.id.login):
-            Intent intent5 = new Intent(this, RegisterScreen.class);
+            Intent intent5 = new Intent(this, Login.class);
             startActivity(intent5);
             break;
 
             case (R.id.logout):
                 Sessions sessions = new Sessions(Dashboard.this);
                 sessions.logoutUserFromSession();
+                Menu menu = navigationView.getMenu();
+                menu.findItem(R.id.login).setVisible(true);
+                menu.findItem(R.id.profile).setVisible(false);
+                menu.findItem(R.id.logout).setVisible(false);
                 Toast.makeText(this, "You have logged out!!", Toast.LENGTH_SHORT).show();
                 break;
         }

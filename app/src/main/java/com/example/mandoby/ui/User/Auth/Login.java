@@ -76,8 +76,6 @@ public class Login extends AppCompatActivity {
                         public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
 
                             if (response.isSuccessful()) {
-                                Log.i("On success", response.body().getName() == null ? "null" : response.body().getOtp());
-                                Log.i("On success", response.body().getOtp());
                                 WaledOTP = response.body().getOtp();
 
                                     //Sending the verification message
@@ -154,8 +152,6 @@ public class Login extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }else{
-                            Toast.makeText(Login.this, "the name is " + name, Toast.LENGTH_SHORT).show();
-
                             //user is already exists
                             Intent intent = new Intent(Login.this, ConfirmLoginOtp.class);
                             intent.putExtra("phone", phone);
@@ -165,8 +161,6 @@ public class Login extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
-
-
 
                     }
                 }

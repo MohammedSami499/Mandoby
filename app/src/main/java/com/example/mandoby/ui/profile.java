@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.mandoby.Network.Sessions;
 import com.example.mandoby.R;
 import com.example.mandoby.adabters.MandopPostsAdapter;
 import com.example.mandoby.model.Post;
@@ -34,6 +35,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,22 +52,25 @@ public class profile extends AppCompatActivity  {
     UserInfo user;
     String imageUrl;
     String image;
+    String phoneNum;
     ImageView img_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-//
-//        Sessions sessionsUser = new Sessions(profile.this);
-//        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
-//        String phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
+
+        Sessions sessionsUser = new Sessions(profile.this);
+        HashMap<String , String> userDataFromSession = sessionsUser.getUserDetailsFromSession();
+        phoneNum = userDataFromSession.get(Sessions.PhoneNumber);
+
+        Toast.makeText(this,"The phone is : "+  phoneNum, Toast.LENGTH_SHORT).show();
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userName = findViewById(R.id.tv_name);
         img_profile = findViewById(R.id.img_profile_user);
 
-        userViewModel.getUser("01277740873");
+        userViewModel.getUser(phoneNum);
 
         userViewModel.userMutableLiveData.observe(this, new Observer<UserInfo>() {
             @Override
@@ -77,7 +82,7 @@ public class profile extends AppCompatActivity  {
             }
         });
 
-        userViewModel.getPosts("01277740873");
+        userViewModel.getPosts(phoneNum);
         img_user = findViewById(R.id.img_user);
 
         recyclerView = findViewById(R.id.recycler);
@@ -150,7 +155,7 @@ public class profile extends AppCompatActivity  {
                             public void onSuccess(Uri uri) {
 //                                Model model = new Model(uri.toString());
                                 imageUrl = uri.toString();
-                                user = new UserInfo(userName.getText().toString() , imageUrl , "01277740873");
+                                user = new UserInfo(userName.getText().toString() , imageUrl , phoneNum);
                                 userViewModel.storeImage(user);
                                 System.out.println(imageUrl + "url");
                             }

@@ -42,7 +42,6 @@ public class ClientPostsAdapter extends RecyclerView.Adapter<ClientPostsAdapter.
         holder.name.setText(postsList.get(position).getName());
             holder.date.setText(postsList.get(position).getDate());
             holder.quantity.setText(""+postsList.get(position).getAmount() + " "+postsList.get(position).getUnit());
-        //URL url = new URL(postsList.get(position).getImageurl());
        Glide.with(holder.itemView).load(postsList.get(position).getImageurl()).into(holder.productImage);
 
 
